@@ -37,6 +37,7 @@ public class Machine implements Serializable{
 
 	public Machine() {
 		super();
+		this.digitsList = new DigitsList();
 	}
 
 	public Machine(int id) {
