@@ -234,8 +234,9 @@ public class TastierinoView extends JFrame {
 		boolean isCurrentMachineActive = this.model.getCurrentMachine().isActive();
 		if (isCurrentMachineActive) {
 //			this.currentNumberDisplay.setText(this.model.getCurrentMachine().getServiceId().getCurrentNumber());
-
-			this.currentNumberDisplay.setText(""+this.model.getCurrentMachine().getNumberYouAreServing());
+			int serviceId = this.model.getCurrentMachine().getServiceId();
+			Service service = this.model.getId2service().get(serviceId);
+			this.currentNumberDisplay.setText(service.getCurrentNumber());
 		} else {
 			this.currentNumberDisplay.setText("- - -");
 		}
@@ -246,20 +247,17 @@ public class TastierinoView extends JFrame {
 	}
 
 	/**
-	 * Change the display color according to the current service
+	 * Change the display color
 	 * */
 	public void changeDisplayColor(String color) {
-//		TastierinoModel model = this.model;
-//		Machine machine = this.model.getCurrentMachine();
-//		Service service = machine.getServiceId();
-//			String color = machine.getServiceId().getColor();
 			this.currentNumberDisplay.setForeground(ColorFactory.getColor(color));
 	
 	}
 
 	public void updateJumpText() {
 //		String colorName = this.model.getMachines().get(id).getServiceId().getColor();
-		String colorName = "RED"; //TODO: modified it
+		int serviceId = this.model.getCurrentMachine().getServiceId();
+		String colorName = this.model.getId2service().get(serviceId).getColor();
 		Color color = ColorFactory.getColor(colorName);
 		this.jumpNumText.setForeground(color);
 		String text = this.currentNumberDisplay.getText();

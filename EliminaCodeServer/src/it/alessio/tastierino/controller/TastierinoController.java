@@ -137,7 +137,8 @@ public class TastierinoController {
 				nextNumberForService = (Integer.valueOf(lastCalledNumberForService) + 1) % 99;
 			}
 			currentMachine = this.repository.updateMachine(currentMachine, nextNumberForService,serviceId);
-			this.repository.updateService(currentServiceOfTheMachine, ""+nextNumberForService);
+			Service serviceUpdated = this.repository.updateService(currentServiceOfTheMachine, ""+nextNumberForService);
+			this.model.getId2service().put(serviceUpdated.getId(), serviceUpdated);
 			this.model.setCurrentMachine(currentMachine);
 			/**
 			 * ==================
@@ -248,15 +249,16 @@ public class TastierinoController {
 			// default service will be selected
 			currentService = this.model.getId2service().get(0);
 		}
-		currentMachine.setServiceId(currentService.getId());
-		currentMachine.setNumberYouAreServing(Integer.parseInt(currentService.getCurrentNumber()));
+//		currentMachine.setServiceId(currentService.getId());
+//		currentMachine.setNumberYouAreServing(Integer.parseInt(currentService.getCurrentNumber()));
 		int lastNumberCalled = Integer.parseInt(currentService.getCurrentNumber());
 		currentMachine = this.repository.updateMachine(currentMachine,  lastNumberCalled, currentService.getId());
+		this.model.setCurrentMachine(currentMachine);
 		// notify the view of the currentMachine
 		TastierinoView view = machineId2TastierinoView.get(currentMachine.getId());
 		view.changeDisplayColor(currentService.getColor());
-//		view.changeDisplayText(currentMachine.getServiceId().getCurrentNumber());
-		view.changeDisplayText(""+currentMachine.getNumberYouAreServing());
+		view.changeDisplayText(currentService.getCurrentNumber());
+//		view.changeDisplayText(""+currentMachine.getNumberYouAreServing());
 
 		// update grouping of the machine according to the services and notify
 		// the tabellone view

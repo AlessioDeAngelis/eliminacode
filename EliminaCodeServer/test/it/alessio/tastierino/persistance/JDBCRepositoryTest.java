@@ -20,12 +20,20 @@ public class JDBCRepositoryTest {
 		}
 	}
 	
+	@Test
 	public void findAllMachineTest(){
 		JDBCRepository r = new JDBCRepository();
 		List<Machine> machines = r.findAllMachines();
 		for(Machine m : machines){
 			System.out.println(m);
 		}
+	}
+	
+	@Test
+	public void findMachineTest(){
+		JDBCRepository r = new JDBCRepository();
+		Machine m = r.findMachineById(1);
+		assertEquals(m.getId(),1);
 	}
 	
 	@Test

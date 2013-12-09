@@ -111,8 +111,8 @@ public class JDBCRepository {
 		try {
 			String query = "INSERT INTO machines(id,chiave,number,service_id)" + " VALUES (?,?,?,?)";
 			statement = connection.prepareStatement(query);
-			statement.setInt(2, machine.getChiave());
 			statement.setInt(1, machine.getId());
+			statement.setInt(2, machine.getChiave());
 			statement.setInt(3, machine.getNumberYouAreServing());
 			statement.setInt(4, machine.getServiceId());
 
@@ -208,42 +208,7 @@ public class JDBCRepository {
 		}
 
 		return machine;
-	}
-
-	public void updateServiceCurrentNumber(Service service) {
-		EntityManager entityManager = SingletonEMF.get().createEntityManager();
-		entityManager.getTransaction().begin();
-		// java.sql.Connection connection =
-		// entityManager.unwrap(java.sql.Connection.class);
-		// try {
-		// connection.setTransactionIsolation(1);
-		// } catch (SQLException e) {
-		// e.printStackTrace();
-		// }
-		String update = "UPDATE Service s SET s.currentNumber = :currentNumber WHERE s.chiave = :chiave";
-
-		Query query = entityManager.createQuery(update);
-		query.setParameter("currentNumber", service.getCurrentNumber());
-		query.setParameter("chiave", service.getChiave());
-		query.executeUpdate();
-
-		entityManager.getTransaction().commit();
-		entityManager.close();
-	}
-
-	public Service findOrCreateService(Service service) {
-		Service returnedService = null;
-		EntityManager entityManager = SingletonEMF.get().createEntityManager();
-		entityManager.getTransaction().begin();
-		returnedService = entityManager.find(Service.class, service.getChiave());
-		if (returnedService == null) {
-			entityManager.persist(service);
-		}
-		entityManager.getTransaction().commit();
-		entityManager.close();
-
-		return returnedService;
-	}
+	}	
 
 	public List<Service> findAllServices() {
 		List<Service> services = new ArrayList<Service>();
@@ -293,7 +258,7 @@ public class JDBCRepository {
 			statement = connection.prepareStatement(query);
 
 			ResultSet result = statement.executeQuery();
-			if (result.next()) {
+			while (result.next()) {
 				Machine machine = new Machine();
 				machine.setChiave(result.getInt("chiave"));
 				machine.setId(result.getInt("id"));
@@ -318,35 +283,6 @@ public class JDBCRepository {
 		}
 		return machines;
 	}
-
-	// public void updateMachine(Machine machine) {
-	// DataSource ds = DataSource.getInstance();
-	// Connection connection = ds.getConnection();
-	// PreparedStatement statement = null;
-	// try {
-	// String query = "UPDATE machines SET number=? WHERE id = ? ";
-	// statement = connection.prepareStatement(query);
-	// statement.setInt(1, machine.getNumberYouAreServing());
-	// statement.setInt(2, machine.getId());
-	//
-	// statement.executeUpdate();
-	//
-	// } catch (SQLException e) {
-	// e.printStackTrace();
-	// } finally {
-	//
-	// try {
-	// if (statement != null)
-	// statement.close();
-	// if (connection != null)
-	// connection.close();
-	//
-	// } catch (SQLException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// }
 
 	public Service updateService(Service service, String lastCalledNumber) {
 		DataSource ds = DataSource.getInstance();
@@ -388,12 +324,11 @@ public class JDBCRepository {
 		Connection connection = ds.getConnection();
 		PreparedStatement statement = null;
 		try {
-			String query = "UPDATE machines SET number=?, service_id = ? WHERE id = ? and service_id=?";
+			String query = "UPDATE machines SET number=?, service_id = ? WHERE id = ?";
 			statement = connection.prepareStatement(query);
 			statement.setInt(1, lastCalledNumberByMachine);
 			statement.setInt(2, newServiceId);
 			statement.setInt(3, machine.getId());
-			statement.setInt(4, machine.getServiceId());
 			statement.executeUpdate();
 
 			machine.setNumberYouAreServing(lastCalledNumberByMachine);
