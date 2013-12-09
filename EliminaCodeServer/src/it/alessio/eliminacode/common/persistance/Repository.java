@@ -170,7 +170,7 @@ public class Repository {
 		entityManager.getTransaction().begin();
 		Machine machineUpdated = entityManager.find(Machine.class, machine.getChiave());
 		Service serviceUpdated = entityManager.find(Service.class, service.getChiave());
-		machineUpdated.setCurrentService(serviceUpdated);
+//		machineUpdated.setServiceId(serviceUpdated);
 		entityManager.getTransaction().commit();
 		entityManager.close();
 	}

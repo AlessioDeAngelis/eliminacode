@@ -150,7 +150,9 @@ public class TastierinoView extends JFrame {
 		this.currentNumberDisplay.setFont(new Font("SansSerif", Font.BOLD, 30));
 		this.currentNumberDisplay.setHorizontalAlignment(SwingConstants.RIGHT);
 		this.currentNumberDisplay.setBackground(Color.LIGHT_GRAY);
-		this.changeDisplayColor();
+		int serviceId = this.model.getCurrentMachine().getServiceId();//TODO:
+		Service serviceTmp = this.model.getId2service().get(serviceId);
+		this.changeDisplayColor(serviceTmp.getColor());
 		this.updateDisplayText();
 
 		/**
@@ -231,7 +233,10 @@ public class TastierinoView extends JFrame {
 	public void updateDisplayText() {
 		boolean isCurrentMachineActive = this.model.getCurrentMachine().isActive();
 		if (isCurrentMachineActive) {
-			this.currentNumberDisplay.setText(this.model.getCurrentMachine().getCurrentService().getCurrentNumber());
+//			this.currentNumberDisplay.setText(this.model.getCurrentMachine().getServiceId().getCurrentNumber());
+			int serviceId = this.model.getCurrentMachine().getServiceId();
+			Service service = this.model.getId2service().get(serviceId);
+			this.currentNumberDisplay.setText(service.getCurrentNumber());
 		} else {
 			this.currentNumberDisplay.setText("- - -");
 		}
@@ -242,19 +247,17 @@ public class TastierinoView extends JFrame {
 	}
 
 	/**
-	 * Change the display color according to the current service
+	 * Change the display color
 	 * */
-	public void changeDisplayColor() {
-		TastierinoModel model = this.model;
-		Machine machine = this.model.getCurrentMachine();
-		Service service = machine.getCurrentService();
-			String color = machine.getCurrentService().getColor();
+	public void changeDisplayColor(String color) {
 			this.currentNumberDisplay.setForeground(ColorFactory.getColor(color));
 	
 	}
 
 	public void updateJumpText() {
-		String colorName = this.model.getMachines().get(id).getCurrentService().getColor();
+//		String colorName = this.model.getMachines().get(id).getServiceId().getColor();
+		int serviceId = this.model.getCurrentMachine().getServiceId();
+		String colorName = this.model.getId2service().get(serviceId).getColor();
 		Color color = ColorFactory.getColor(colorName);
 		this.jumpNumText.setForeground(color);
 		String text = this.currentNumberDisplay.getText();

@@ -3,8 +3,7 @@ package it.alessio.tabellone.controller;
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
-import it.alessio.eliminacode.common.persistance.Repository;
-import it.alessio.eliminacode.common.sound.MusicPlayer;
+import it.alessio.eliminacode.common.persistance.JDBCRepository;
 import it.alessio.tabellone.view.TabelloneView;
 import it.alessio.tastierino.view.TastierinoView;
 
@@ -12,13 +11,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.persistence.PostLoad;
 
 /**
  * The Controller coordinates interactions between the View and Model
@@ -27,14 +23,14 @@ import javax.persistence.PostLoad;
 public class TabelloneController {
 	private TastierinoModel model;
 	private TabelloneView tabelloneView;
-	private Repository repository;
+	private JDBCRepository repository;
 	private Map<Integer, TastierinoView> machineId2TastierinoView;
 	private Properties properties;
 
 	public TabelloneController() {
 		loadProperties();
 		this.model = new TastierinoModel();
-		this.repository = new Repository();
+		this.repository = new JDBCRepository();
 		loadServices();
 		groupService2machines();
 		this.tabelloneView = new TabelloneView(properties.getProperty("nome_azienda", "Tabellone"), model);
@@ -95,7 +91,7 @@ public class TabelloneController {
 //		List<Machine> machines = this.repository.findAllMachines();
 		List<Machine> machines = this.model.getMachines();
 		for (Machine machine : machines) {
-			Integer serviceId = machine.getCurrentService().getId();
+			Integer serviceId = machine.getServiceId();
 			List<Machine> machinesTmp = service2machines.get(serviceId);
 			if (machinesTmp == null) {
 				machinesTmp = new ArrayList<Machine>();

@@ -14,8 +14,9 @@ import javax.persistence.Id;
 /**
  * This class represent a service, a queue *
  */
-
-public class Service implements Serializable {
+@Entity
+@EntityListeners({ServiceEntityListener.class})
+public class ServiceJPA implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -31,14 +32,14 @@ public class Service implements Serializable {
 	 * */
 	private String currentNumber;
 
-	public Service() {
+	public ServiceJPA() {
 		super();
 		this.id = -1;
 		this.name = "Servizio";
 		this.currentNumber = "- - -";
 	}
 
-	public Service(int id, String name, String currentNumber, String color) {
+	public ServiceJPA(int id, String name, String currentNumber, String color) {
 		super();
 		this.id = id;
 		this.chiave = id + 1;// in the db the key must start by 1
@@ -113,7 +114,7 @@ public class Service implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Service other = (Service) obj;
+		ServiceJPA other = (ServiceJPA) obj;
 		if (chiave != other.chiave)
 			return false;
 		if (color == null) {

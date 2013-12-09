@@ -3,7 +3,7 @@ package it.alessio.tastierino.controller;
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
-import it.alessio.eliminacode.common.persistance.Repository;
+import it.alessio.eliminacode.common.persistance.JDBCRepository;
 import it.alessio.eliminacode.common.sound.MusicPlayer;
 import it.alessio.tastierino.controller.listeners.NextButtonListener;
 import it.alessio.tastierino.controller.listeners.NumButtonListener;
@@ -17,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -26,7 +27,7 @@ import java.util.Properties;
 public class TastierinoController {
 	private TastierinoModel model;
 	// private TabelloneView tabelloneView;
-	private Repository repository;
+	private JDBCRepository repository;
 	private TastierinoView tastierinoView;
 	private Map<Integer, TastierinoView> machineId2TastierinoView;
 	private Properties properties;
@@ -34,22 +35,31 @@ public class TastierinoController {
 	public TastierinoController(int machineNumber) {
 		initProperties();
 		this.model = new TastierinoModel();
-		this.repository = new Repository();
+		this.repository = new JDBCRepository();
 		this.machineId2TastierinoView = new HashMap<Integer, TastierinoView>();
-		initializeServices();
-
+//		initializeServices();
+		loadServices();
 		// TODO: initialize the machine
-		Machine machine = new Machine(machineNumber);
-		machine.setCurrentService(model.getId2service().get(machineNumber));// default
+//		Machine machine = new Machine(machineNumber);
+//		machine.setServiceId(model.getId2service().get(machineNumber).getId());// default
 		// initial
 		// service
 		// TODO check this if
-		if (machine.getCurrentService() != null && machine.getCurrentService().getCurrentNumber() != null) {
-			machine.setNumberYouAreServing(Integer.parseInt(machine.getCurrentService().getCurrentNumber()));
-		}
+//		if (machine.getServiceId() != null && machine.getServiceId().getCurrentNumber() != null) {
+//			machine.setNumberYouAreServing(Integer.parseInt(machine.getServiceId().getCurrentNumber()));
+//		}
 		// this.model.addMachine(machine);//deprecated
+//		this.model.setCurrentMachine(machine);
+//		this.repository.findOrCreateMachine(machine);
+		Machine machine = null;
+		machine = this.repository.findMachineById(machineNumber);
+		if(machine == null){
+			machine = new Machine(machineNumber);
+			this.repository.persistMachine(machine);
+		}
+		
 		this.model.setCurrentMachine(machine);
-		this.repository.findOrCreateMachine(machine);
+
 		// Tell the View that when ever the calculate button
 		// is clicked to execute the actionPerformed method
 		// in the CalculateListener inner class
@@ -84,49 +94,78 @@ public class TastierinoController {
 		}
 
 	}
-
-	private void initializeServices() {
+	
+	private void loadServices() {
+		//find all services
+		List<Service> services = this.repository.findAllServices();
 		Map<Integer, Service> id2service = this.model.getId2service();
-		String numServiceString = properties.getProperty("numero_servizi");
-		int numServices = 4;
-		if (numServiceString != null && !numServiceString.equals("")) {
-			numServices = Integer.parseInt(numServiceString);
-		}
-		for (int i = 0; i < numServices; i++) {
-			Service service = new Service(i, properties.getProperty("nome_servizio" + (i + 1)), "0",
-					properties.getProperty("colore_servizio" + (i + 1)));
-			service = this.repository.findOrCreateService(service);
-			id2service.put(i, service);
-		}
-	}
+		for(int i = 0; i<services.size(); i++){
+			id2service.put(i, services.get(i));
+		}	
+	}	
+
+//	private void initializeServices() {
+//		Map<Integer, Service> id2service = this.model.getId2service();
+//		String numServiceString = properties.getProperty("numero_servizi");
+//		int numServices = 4;
+//		if (numServiceString != null && !numServiceString.equals("")) {
+//			numServices = Integer.parseInt(numServiceString);
+//		}
+//		for (int i = 0; i < numServices; i++) {
+//			Service service = new Service(i, properties.getProperty("nome_servizio" + (i + 1)), "0",
+//					properties.getProperty("colore_servizio" + (i + 1)));
+//			service = this.repository.findOrCreateService(service);
+//			id2service.put(i, service);
+//		}
+//	}
 
 	/*
 	 * When the next button is pressed the current number is incremented by 1.
 	 * The current machine must be active (ON), otherwise it will not increment
-	 * the value
+	 * the value. The last number called of the service will be incremented by 1 as well
 	 */
 	public void nextNumberAction(int machineThatTriggered) {
 		Machine currentMachine = this.model.getCurrentMachine();
 		boolean isCurrentMachineActive = currentMachine.isActive();
 		if (isCurrentMachineActive) {
-
-			int nextNumber = Integer.parseInt(currentMachine.getCurrentService().getCurrentNumber()) + 1;
-			currentMachine.getCurrentService().setCurrentNumber("" + nextNumber);
-			currentMachine.setNumberYouAreServing(nextNumber);
-			// update machine in the db
-			int serviceId = currentMachine.getCurrentService().getId();
-			Service currentService = this.repository.findServiceById(serviceId);
-			currentService.setCurrentNumber(""+nextNumber);
-			this.repository.mergeMachine(currentMachine);//TODO: maybe you should uncomment
-//			this.repository.updateMachine(currentMachine, currentService);
-			this.repository.updateServiceCurrentNumber(currentService);
+			int serviceId = currentMachine.getServiceId();
+			String lastCalledNumberForService;
+			Service currentServiceOfTheMachine = this.repository.findServiceById(serviceId);
+			lastCalledNumberForService = currentServiceOfTheMachine.getCurrentNumber();
+			int nextNumberForService = 0;
+			if (lastCalledNumberForService != null && !lastCalledNumberForService.equals("")) {
+				nextNumberForService = (Integer.valueOf(lastCalledNumberForService) + 1) % 99;
+			}
+			currentMachine = this.repository.updateMachine(currentMachine, nextNumberForService,serviceId);
+			Service serviceUpdated = this.repository.updateService(currentServiceOfTheMachine, ""+nextNumberForService);
+			this.model.getId2service().put(serviceUpdated.getId(), serviceUpdated);
 			this.model.setCurrentMachine(currentMachine);
+			/**
+			 * ==================
+			 * */
+//			int nextNumber = Integer.parseInt(currentMachine.getServiceId().getCurrentNumber()) + 1;
+//			currentMachine.getServiceId().setCurrentNumber("" + nextNumber);
+//			currentMachine.setNumberYouAreServing(nextNumber);
+//			// update machine in the db
+//			int serviceId = currentMachine.getServiceId().getId();
+//			Service currentService = this.repository.findServiceById(serviceId);
+//			currentService.setCurrentNumber(""+nextNumber);
+//			this.repository.updateMachine(currentMachine, currentService);
+//			this.repository.updateServiceCurrentNumber(currentService);
+//			this.model.setCurrentMachine(currentMachine);
+			
+			/**
+			 * ==================
+			 * */
 			// notify the view about the change
 			MusicPlayer.playSound("data/sounds/coin.wav");
 			// this.tabelloneView.updateViewText();
-			/*
-			 * Uncomment the following if you want the next *
-			 */
+			
+
+			/* Only the current machine view wants to be notified */
+			TastierinoView view = machineId2TastierinoView.get(currentMachine.getId());
+			view.changeDisplayText("" + currentMachine.getNumberYouAreServing());
+			
 			// only the view of the machines that have this service as current
 			// want to be notified about the change
 			// while the others don't want to be disturbed
@@ -139,9 +178,6 @@ public class TastierinoController {
 			// }
 			// }
 
-			/* Only the current machine view wants to be notified */
-			TastierinoView view = machineId2TastierinoView.get(currentMachine.getId());
-			view.changeDisplayText("" + currentMachine.getNumberYouAreServing());
 		}
 
 	}
@@ -158,11 +194,13 @@ public class TastierinoController {
 			if (value.equals("OK")) {
 				// sets the list of numbers as the current value to be displayed
 				String newNumberToBeServed = currentMachine.getDigitsList().toString();
-				Service currentService = currentMachine.getCurrentService();
-				currentService.setCurrentNumber(newNumberToBeServed);
-				this.repository.updateServiceCurrentNumber(currentService);
+				int serviceId = currentMachine.getServiceId();
+				//TODO: you can do the following only with the id without finding the service
+				Service currentService = this.repository.findServiceById(serviceId);
+				this.repository.updateService(currentService, newNumberToBeServed);
 				currentMachine.getDigitsList().clearList();
 				currentMachine.setNumberYouAreServing(Integer.parseInt(newNumberToBeServed));
+				//TODO: update the machine in the db
 				// this.tabelloneView.updateViewText();
 
 				// only the current machine view wants to be notified
@@ -188,7 +226,8 @@ public class TastierinoController {
 		currentMachine.setActive(!isActive);
 		// notify the view of the current machine
 		TastierinoView view = machineId2TastierinoView.get(currentMachine.getId());
-		view.changeDisplayText(currentMachine.getCurrentService().getCurrentNumber());
+//		view.changeDisplayText(currentMachine.getServiceId().getCurrentNumber()); //TODO: maybe it's correct
+		view.changeDisplayText(""+currentMachine.getNumberYouAreServing());
 	}
 
 	/**
@@ -210,12 +249,17 @@ public class TastierinoController {
 			// default service will be selected
 			currentService = this.model.getId2service().get(0);
 		}
-		currentMachine.setCurrentService(currentService);
-		currentMachine.setNumberYouAreServing(Integer.parseInt(currentService.getCurrentNumber()));
+//		currentMachine.setServiceId(currentService.getId());
+//		currentMachine.setNumberYouAreServing(Integer.parseInt(currentService.getCurrentNumber()));
+		int lastNumberCalled = Integer.parseInt(currentService.getCurrentNumber());
+		currentMachine = this.repository.updateMachine(currentMachine,  lastNumberCalled, currentService.getId());
+		this.model.setCurrentMachine(currentMachine);
 		// notify the view of the currentMachine
 		TastierinoView view = machineId2TastierinoView.get(currentMachine.getId());
-		view.changeDisplayColor();
-		view.changeDisplayText(currentMachine.getCurrentService().getCurrentNumber());
+		view.changeDisplayColor(currentService.getColor());
+		view.changeDisplayText(currentService.getCurrentNumber());
+//		view.changeDisplayText(""+currentMachine.getNumberYouAreServing());
+
 		// update grouping of the machine according to the services and notify
 		// the tabellone view
 		// this.groupService2machines();
