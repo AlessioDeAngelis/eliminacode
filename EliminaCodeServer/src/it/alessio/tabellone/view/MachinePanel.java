@@ -51,7 +51,9 @@ public class MachinePanel extends JPanel {
 //		this.currentNumberTextField.setLineWrap(true);
 //		this.currentNumberTextField.setBackground(Color.LIGHT_GRAY);
 		this.currentNumberTextField.setForeground(this.numberColor);
-		this.currentNumberTextField.setText(machine.getServiceId().getCurrentNumber());
+		Service service = this.model.getId2service().get(machine.getServiceId());
+		String lastCalledNumber = service.getCurrentNumber();
+		this.currentNumberTextField.setText(lastCalledNumber);
 		this.add(currentNumberTextField,BorderLayout.EAST);
 		
 		this.machineNumberTextField = new JTextField();

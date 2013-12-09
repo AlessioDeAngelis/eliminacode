@@ -244,7 +244,7 @@ public class TastierinoController {
 		currentMachine = this.repository.updateMachine(currentMachine,  lastNumberCalled, currentService.getId());
 		// notify the view of the currentMachine
 		TastierinoView view = machineId2TastierinoView.get(currentMachine.getId());
-		view.changeDisplayColor();
+		view.changeDisplayColor(currentService.getColor());
 //		view.changeDisplayText(currentMachine.getServiceId().getCurrentNumber());
 		view.changeDisplayText(""+currentMachine.getNumberYouAreServing());
 

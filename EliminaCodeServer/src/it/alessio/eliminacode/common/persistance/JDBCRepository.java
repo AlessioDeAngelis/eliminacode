@@ -246,34 +246,75 @@ public class JDBCRepository {
 
 	public List<Service> findAllServices() {
 		List<Service> services = new ArrayList<Service>();
-		EntityManager entityManager = SingletonEMF.get().createEntityManager();
-		entityManager.getTransaction().begin();
-		Query q = entityManager.createQuery("select l from Service l");
-		services = q.getResultList();
+		DataSource ds = DataSource.getInstance();
+		Connection connection = ds.getConnection();
+		PreparedStatement statement = null;
+		try {
+			String query = "SELECT * DISTINCT FROM services";
+			statement = connection.prepareStatement(query);
 
-		entityManager.getTransaction().commit();
-		entityManager.close();
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				Service service = new Service();
+				service.setChiave(result.getInt("chiave"));
+				service.setId(result.getInt("id"));
+				service.setName(result.getString("name"));
+				service.setColor(result.getString("color"));
+				service.setCurrentNumber(result.getString("currentNumber"));
+				services.add(service);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 
 		return services;
 	}
 
 	public List<Machine> findAllMachines() {
 		List<Machine> machines = new ArrayList<Machine>();
-		EntityManager entityManager = SingletonEMF.get().createEntityManager();
-		entityManager.getTransaction().begin();
-		java.sql.Connection connection = entityManager.unwrap(java.sql.Connection.class);
+		DataSource ds = DataSource.getInstance();
+		Connection connection = ds.getConnection();
+		PreparedStatement statement = null;
 		try {
-			connection.setTransactionIsolation(1);
+			String query = "SELECT * DISTINCT FROM machines ";
+			statement = connection.prepareStatement(query);
+
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				Machine machine = new Machine();
+				machine.setChiave(result.getInt("chiave"));
+				machine.setId(result.getInt("id"));
+				machine.setNumberYouAreServing(result.getInt("number"));
+				machine.setServiceId(result.getInt("service_id"));
+				machines.add(machine);
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-		Query q = entityManager.createQuery("select m from Machine m");
-		machines = q.getResultList();
-		for (Machine machine : machines) {
-			System.out.println(machine);
-		}
-		entityManager.getTransaction().commit();
-		entityManager.close();
 		return machines;
 	}
 
