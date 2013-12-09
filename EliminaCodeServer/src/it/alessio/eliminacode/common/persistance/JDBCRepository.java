@@ -25,8 +25,7 @@ public class JDBCRepository {
 		Connection connection = ds.getConnection();
 		PreparedStatement statement = null;
 		try {
-			String query = "CREATE TABLE services( id INT PRIMARY KEY, chiave INT ,name VARCHAR(32),color VARCHAR(32),currentNumber VARCHAR(12))"
-					+ " VALUES (?,?,?,?,?)";
+			String query = "CREATE TABLE services( id INT PRIMARY KEY, chiave INT ,name VARCHAR(32),color VARCHAR(32),currentNumber VARCHAR(12))";
 			statement = connection.prepareStatement(query);
 
 			statement.executeUpdate();
@@ -137,17 +136,18 @@ public class JDBCRepository {
 	}
 
 	public Service findServiceById(int id) {
-		Service service = new Service();
+		Service service = null;
 		DataSource ds = DataSource.getInstance();
 		Connection connection = ds.getConnection();
 		PreparedStatement statement = null;
 		try {
-			String query = "SELECT * DISTINCT FROM services s WHERE s.id = ?  ";
+			String query = "SELECT * FROM services s WHERE s.id = ?  ";
 			statement = connection.prepareStatement(query);
 			statement.setInt(1, id);
 
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
+				service = new Service();
 				service.setChiave(result.getInt("chiave"));
 				service.setId(result.getInt("id"));
 				service.setName(result.getString("name"));
@@ -174,17 +174,18 @@ public class JDBCRepository {
 	}
 
 	public Machine findMachineById(int id) {
-		Machine machine = new Machine();
+		Machine machine = null;
 		DataSource ds = DataSource.getInstance();
 		Connection connection = ds.getConnection();
 		PreparedStatement statement = null;
 		try {
-			String query = "SELECT * DISTINCT FROM machines m WHERE m.id = ?  ";
+			String query = "SELECT * FROM machines m WHERE m.id = ?  ";
 			statement = connection.prepareStatement(query);
 			statement.setInt(1, id);
 
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
+				machine = new Machine();
 				machine.setChiave(result.getInt("chiave"));
 				machine.setId(result.getInt("id"));
 				machine.setNumberYouAreServing(result.getInt("number"));
@@ -250,7 +251,7 @@ public class JDBCRepository {
 		Connection connection = ds.getConnection();
 		PreparedStatement statement = null;
 		try {
-			String query = "SELECT * DISTINCT FROM services";
+			String query = "SELECT * FROM services";
 			statement = connection.prepareStatement(query);
 
 			ResultSet result = statement.executeQuery();
@@ -288,7 +289,7 @@ public class JDBCRepository {
 		Connection connection = ds.getConnection();
 		PreparedStatement statement = null;
 		try {
-			String query = "SELECT * DISTINCT FROM machines ";
+			String query = "SELECT * FROM machines ";
 			statement = connection.prepareStatement(query);
 
 			ResultSet result = statement.executeQuery();

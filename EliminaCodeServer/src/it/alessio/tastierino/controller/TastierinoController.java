@@ -17,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -37,7 +38,7 @@ public class TastierinoController {
 		this.repository = new JDBCRepository();
 		this.machineId2TastierinoView = new HashMap<Integer, TastierinoView>();
 //		initializeServices();
-
+		loadServices();
 		// TODO: initialize the machine
 //		Machine machine = new Machine(machineNumber);
 //		machine.setServiceId(model.getId2service().get(machineNumber).getId());// default
@@ -93,6 +94,15 @@ public class TastierinoController {
 		}
 
 	}
+	
+	private void loadServices() {
+		//find all services
+		List<Service> services = this.repository.findAllServices();
+		Map<Integer, Service> id2service = this.model.getId2service();
+		for(int i = 0; i<services.size(); i++){
+			id2service.put(i, services.get(i));
+		}	
+	}	
 
 //	private void initializeServices() {
 //		Map<Integer, Service> id2service = this.model.getId2service();

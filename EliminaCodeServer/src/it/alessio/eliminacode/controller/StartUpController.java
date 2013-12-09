@@ -23,7 +23,13 @@ public class StartUpController {
 	public void initialize(){
 		loadProperties();
 		this.repository = new JDBCRepository();
+		createTables();
 		persistServices();
+	}
+
+	private void createTables() {
+		this.repository.createServiceTable();
+		this.repository.createMachineTable();
 	}
 
 	private void loadProperties() {
@@ -40,7 +46,6 @@ public class StartUpController {
 	}
 
 	private void persistServices() {
-		this.repository.createServiceTable();
 		String numServiceString = properties.getProperty("numero_servizi");
 		int numServices = 4;
 		if (numServiceString != null && !numServiceString.equals("")) {
