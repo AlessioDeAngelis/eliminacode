@@ -95,7 +95,7 @@ public class TabelloneController {
 //		List<Machine> machines = this.repository.findAllMachines();
 		List<Machine> machines = this.model.getMachines();
 		for (Machine machine : machines) {
-			Integer serviceId = machine.getCurrentService().getId();
+			Integer serviceId = machine.getServiceId().getId();
 			List<Machine> machinesTmp = service2machines.get(serviceId);
 			if (machinesTmp == null) {
 				machinesTmp = new ArrayList<Machine>();

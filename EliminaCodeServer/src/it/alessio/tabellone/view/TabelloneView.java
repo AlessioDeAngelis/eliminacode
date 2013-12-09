@@ -60,7 +60,7 @@ public class TabelloneView extends JFrame {
 		/* The machine panels */
 		this.machineId2MachinePanel = new HashMap<Integer, MachinePanel>();
 		for (Machine machine : this.model.getMachines()) {
-			Color serviceColor = ColorFactory.getColor(machine.getCurrentService().getColor());
+			Color serviceColor = ColorFactory.getColor(machine.getServiceId().getColor());
 			MachinePanel machinePanel = new MachinePanel(model, machine, serviceColor);
 			machineId2MachinePanel.put(machine.getId(), machinePanel);
 		}

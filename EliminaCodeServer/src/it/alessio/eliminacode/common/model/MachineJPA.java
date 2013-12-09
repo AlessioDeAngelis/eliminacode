@@ -14,19 +14,25 @@ import javax.persistence.Transient;
 /**
  * Represents a physical keypad
  * */
-public class Machine implements Serializable{
+@Entity
+public class MachineJPA implements Serializable{
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int chiave;
 	private int id;
 	/**
 	 * this is the digit list that will form a number set by a user of the
 	 * system
 	 * */
+	@Transient
 	private DigitsList digitsList;
 	/**
 	 * The number of the currentService
 	 * */
-	private int serviceId;
+	@OneToOne
+	(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+	private Service currentService;
 
 	/**
 	 * the current machine is active or not
@@ -35,13 +41,13 @@ public class Machine implements Serializable{
 
 	private int numberYouAreServing;
 
-	public Machine() {
+	public MachineJPA() {
 		super();
 	}
 
-	public Machine(int id) {
+	public MachineJPA(int id) {
 		this.digitsList = new DigitsList();
-		this.serviceId = id;
+		this.currentService = new Service();
 		this.isActive = true;
 		this.id = id;
 		this.chiave = id + 1;// in the db the key must start by 1
@@ -64,12 +70,12 @@ public class Machine implements Serializable{
 		this.isActive = isActive;
 	}
 
-	public int getServiceId() {
-		return this.serviceId;
+	public Service getCurrentService() {
+		return currentService;
 	}
 
-	public void setServiceId(int serviceId) {
-		this.serviceId = serviceId;
+	public void setCurrentService(Service currentService) {
+		this.currentService = currentService;
 	}
 
 	public int getId() {
@@ -92,12 +98,12 @@ public class Machine implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + chiave;
+		result = prime * result + ((currentService == null) ? 0 : currentService.hashCode());
 		result = prime * result + ((digitsList == null) ? 0 : digitsList.hashCode());
 		result = prime * result + id;
 		result = prime * result + (isActive ? 1231 : 1237);
+		result = prime * result + chiave;
 		result = prime * result + numberYouAreServing;
-		result = prime * result + serviceId;
 		return result;
 	}
 
@@ -109,8 +115,11 @@ public class Machine implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Machine other = (Machine) obj;
-		if (chiave != other.chiave)
+		MachineJPA other = (MachineJPA) obj;
+		if (currentService == null) {
+			if (other.currentService != null)
+				return false;
+		} else if (!currentService.equals(other.currentService))
 			return false;
 		if (digitsList == null) {
 			if (other.digitsList != null)
@@ -121,9 +130,9 @@ public class Machine implements Serializable{
 			return false;
 		if (isActive != other.isActive)
 			return false;
-		if (numberYouAreServing != other.numberYouAreServing)
+		if (chiave != other.chiave)
 			return false;
-		if (serviceId != other.serviceId)
+		if (numberYouAreServing != other.numberYouAreServing)
 			return false;
 		return true;
 	}
@@ -138,8 +147,8 @@ public class Machine implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Machine [chiave=" + chiave + ", id=" + id + ", digitsList=" + digitsList + ", serviceId=" + serviceId
-				+ ", isActive=" + isActive + ", numberYouAreServing=" + numberYouAreServing + "]";
+		return "Machine [chiave=" + chiave + ", id=" + id + ", digitsList=" + digitsList + ", currentService="
+				+ currentService + ", isActive=" + isActive + ", numberYouAreServing=" + numberYouAreServing + "]";
 	}
 
 }

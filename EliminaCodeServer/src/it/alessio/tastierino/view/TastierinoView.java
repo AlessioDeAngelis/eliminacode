@@ -231,7 +231,7 @@ public class TastierinoView extends JFrame {
 	public void updateDisplayText() {
 		boolean isCurrentMachineActive = this.model.getCurrentMachine().isActive();
 		if (isCurrentMachineActive) {
-			this.currentNumberDisplay.setText(this.model.getCurrentMachine().getCurrentService().getCurrentNumber());
+			this.currentNumberDisplay.setText(this.model.getCurrentMachine().getServiceId().getCurrentNumber());
 		} else {
 			this.currentNumberDisplay.setText("- - -");
 		}
@@ -247,14 +247,14 @@ public class TastierinoView extends JFrame {
 	public void changeDisplayColor() {
 		TastierinoModel model = this.model;
 		Machine machine = this.model.getCurrentMachine();
-		Service service = machine.getCurrentService();
-			String color = machine.getCurrentService().getColor();
+		Service service = machine.getServiceId();
+			String color = machine.getServiceId().getColor();
 			this.currentNumberDisplay.setForeground(ColorFactory.getColor(color));
 	
 	}
 
 	public void updateJumpText() {
-		String colorName = this.model.getMachines().get(id).getCurrentService().getColor();
+		String colorName = this.model.getMachines().get(id).getServiceId().getColor();
 		Color color = ColorFactory.getColor(colorName);
 		this.jumpNumText.setForeground(color);
 		String text = this.currentNumberDisplay.getText();
