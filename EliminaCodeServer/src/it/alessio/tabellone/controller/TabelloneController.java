@@ -56,7 +56,7 @@ public class TabelloneController {
 				groupService2machines();
 				// this.tabelloneView.updateViewOrder();
 				this.tabelloneView.updateViewText(services);
-				this.tabelloneView.updateViewOrder();
+				this.tabelloneView.updateViewOrder(services);
 				this.tabelloneView.updateNewsPanel(feedMessage);
 
 			}
