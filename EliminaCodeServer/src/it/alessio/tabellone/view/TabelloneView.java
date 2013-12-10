@@ -3,15 +3,16 @@ package it.alessio.tabellone.view;
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
+import it.alessio.eliminacode.common.persistance.JDBCRepository;
 import it.alessio.eliminacode.common.util.ColorFactory;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -56,6 +57,7 @@ public class TabelloneView extends JFrame {
 		for (Service service : this.model.getId2service().values()) {
 			ServicePanel servicePanel = new ServicePanel(model, service, ColorFactory.getColor(service.getColor()));
 			this.serviceId2ServicePanel.put(service.getId(), servicePanel);
+			
 		}
 		/* The machine panels */
 		this.machineId2MachinePanel = new HashMap<Integer, MachinePanel>();
@@ -105,7 +107,15 @@ public class TabelloneView extends JFrame {
 		this.validate();//for rendering the new layout
 	}
 
-	public void updateViewText() {
+	public void updateViewText(List<Service> services) {
+		//update each servicePanel
+		Set<Integer> serviceIds = this.model.getId2service().keySet();
+		JDBCRepository r = new JDBCRepository();
+		for(Service service : services){
+			ServicePanel servicePanel = this.serviceId2ServicePanel.get(service.getId());
+			servicePanel.updateLastNumberTextField(service.getCurrentNumber());
+		}
+
 		// update each machine panel
 		for (MachinePanel machinePanel : this.machineId2MachinePanel.values()) {
 			//TODO: aggiornare anche la macchina

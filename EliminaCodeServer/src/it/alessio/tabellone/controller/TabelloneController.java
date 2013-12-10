@@ -4,6 +4,7 @@ import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
 import it.alessio.eliminacode.common.persistance.JDBCRepository;
+import it.alessio.tabellone.view.ServicePanel;
 import it.alessio.tabellone.view.TabelloneView;
 import it.alessio.tastierino.view.TastierinoView;
 
@@ -34,7 +35,7 @@ public class TabelloneController {
 		loadServices();
 		groupService2machines();
 		this.tabelloneView = new TabelloneView(properties.getProperty("nome_azienda", "Tabellone"), model);
-		this.tabelloneView.updateViewText();
+//		this.tabelloneView.updateViewText();
 //		Singleton.setTabelloneController(this);
 
 	}
@@ -46,9 +47,10 @@ public class TabelloneController {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}finally{
+				List<Service> services  = repository.findAllServices();
 				groupService2machines();
-				this.tabelloneView.updateViewOrder();
-				this.tabelloneView.updateViewText();
+//				this.tabelloneView.updateViewOrder();
+				this.tabelloneView.updateViewText(services);
 				this.tabelloneView.updateViewOrder();
 
 			}
@@ -102,15 +104,4 @@ public class TabelloneController {
 		this.model.setService2machines(service2machines);
 	}
 	
-	public void onServiceEntityUpdatedAction(){
-		this.groupService2machines();
-		this.tabelloneView.updateViewOrder();
-		this.tabelloneView.updateViewText();
-	}
-	
-//	@PostLoad
-//	public void onPostLoad(Service service){
-//		System.out.println("Post load controller");
-//	}
-
 }
