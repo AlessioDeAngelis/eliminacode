@@ -11,6 +11,14 @@ public class FeedMessage {
 	String author;
 	String guid;
 
+	public FeedMessage() {
+		this.title = "";
+		this.description = "";
+		this.link = "";
+		this.author = "";
+		this.guid = "";
+	}
+
 	public String getTitle() {
 		return title;
 	}
