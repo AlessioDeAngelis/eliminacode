@@ -8,3 +8,4 @@ nome_servizio1=Accettazione
 nome_servizio2=F2
 nome_servizio3=F3
 nome_servizio4=F4
+rss_url=http://ansa.feedsportal.com/c/34225/f/621689/index.rss

@@ -31,8 +31,7 @@ public class MachineJPA implements Serializable{
 	 * The number of the currentService
 	 * */
 	@OneToOne
-	(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
-	private Service currentService;
+	private ServiceJPA currentService;
 
 	/**
 	 * the current machine is active or not
@@ -47,7 +46,7 @@ public class MachineJPA implements Serializable{
 
 	public MachineJPA(int id) {
 		this.digitsList = new DigitsList();
-		this.currentService = new Service();
+		this.currentService = new ServiceJPA();
 		this.isActive = true;
 		this.id = id;
 		this.chiave = id + 1;// in the db the key must start by 1
@@ -70,11 +69,11 @@ public class MachineJPA implements Serializable{
 		this.isActive = isActive;
 	}
 
-	public Service getCurrentService() {
+	public ServiceJPA getCurrentService() {
 		return currentService;
 	}
 
-	public void setCurrentService(Service currentService) {
+	public void setCurrentService(ServiceJPA currentService) {
 		this.currentService = currentService;
 	}
 

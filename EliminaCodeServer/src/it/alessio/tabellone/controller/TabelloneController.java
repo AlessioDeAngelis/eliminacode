@@ -4,7 +4,8 @@ import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
 import it.alessio.eliminacode.common.persistance.JDBCRepository;
-import it.alessio.tabellone.view.ServicePanel;
+import it.alessio.tabellone.news.FeedController;
+import it.alessio.tabellone.news.FeedMessage;
 import it.alessio.tabellone.view.TabelloneView;
 import it.alessio.tastierino.view.TastierinoView;
 
@@ -18,8 +19,8 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * The Controller coordinates interactions between the View and Model
- * Of the TABELLONE
+ * The Controller coordinates interactions between the View and Model Of the
+ * TABELLONE
  * */
 public class TabelloneController {
 	private TastierinoModel model;
@@ -27,31 +28,36 @@ public class TabelloneController {
 	private JDBCRepository repository;
 	private Map<Integer, TastierinoView> machineId2TastierinoView;
 	private Properties properties;
+	private FeedController feedController;
 
 	public TabelloneController() {
 		loadProperties();
 		this.model = new TastierinoModel();
 		this.repository = new JDBCRepository();
+		String rssUrl = properties.getProperty("rss_url");
+		this.feedController = new FeedController(rssUrl);
 		loadServices();
 		groupService2machines();
 		this.tabelloneView = new TabelloneView(properties.getProperty("nome_azienda", "Tabellone"), model);
-//		this.tabelloneView.updateViewText();
-//		Singleton.setTabelloneController(this);
+		// this.tabelloneView.updateViewText();
+		// Singleton.setTabelloneController(this);
 
 	}
-	
-	public void mainLoop(){
-		while(true){
+
+	public void mainLoop() {
+		while (true) {
 			try {
-				Thread.sleep(4000);				
+				Thread.sleep(4000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}finally{
-				List<Service> services  = repository.findAllServices();
+			} finally {
+				List<Service> services = repository.findAllServices();
+				FeedMessage feedMessage = this.feedController.giveNextMessage();
 				groupService2machines();
-//				this.tabelloneView.updateViewOrder();
+				// this.tabelloneView.updateViewOrder();
 				this.tabelloneView.updateViewText(services);
 				this.tabelloneView.updateViewOrder();
+				this.tabelloneView.updateNewsPanel(feedMessage);
 
 			}
 		}
@@ -71,16 +77,16 @@ public class TabelloneController {
 	}
 
 	private void loadServices() {
-		//find all services
+		// find all services
 		List<Service> services = this.repository.findAllServices();
 		Map<Integer, Service> id2service = this.model.getId2service();
-		for(int i = 0; i<services.size(); i++){
+		for (int i = 0; i < services.size(); i++) {
 			id2service.put(i, services.get(i));
-		}	
-	}	
-	
-	//find all the machines
-	private void loadMachines(){
+		}
+	}
+
+	// find all the machines
+	private void loadMachines() {
 		List<Machine> machines = this.repository.findAllMachines();
 		this.model.setMachines(machines);
 	}
@@ -90,7 +96,7 @@ public class TabelloneController {
 
 		Map<Integer, List<Machine>> service2machines;
 		service2machines = new HashMap<Integer, List<Machine>>();
-//		List<Machine> machines = this.repository.findAllMachines();
+		// List<Machine> machines = this.repository.findAllMachines();
 		List<Machine> machines = this.model.getMachines();
 		for (Machine machine : machines) {
 			Integer serviceId = machine.getServiceId();
@@ -103,5 +109,5 @@ public class TabelloneController {
 		}
 		this.model.setService2machines(service2machines);
 	}
-	
+
 }

@@ -5,6 +5,7 @@ import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
 import it.alessio.eliminacode.common.persistance.JDBCRepository;
 import it.alessio.eliminacode.common.util.ColorFactory;
+import it.alessio.tabellone.news.FeedMessage;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -37,6 +38,8 @@ public class TabelloneView extends JFrame {
 	private Map<Integer, MachinePanel> machineId2MachinePanel;
 	private JPanel leftPanel;
 	private ImagePanel imagePanel;
+	private NewsPanel newsPanel;
+	private JPanel upperPanel;
 	private Map<Integer, List<MachinePanel>> serviceId2MachinePanel;
 
 	public TabelloneView(String title, TastierinoModel model) {
@@ -50,7 +53,12 @@ public class TabelloneView extends JFrame {
 	}
 
 	private void initComponents() {
-		this.setLayout(new GridLayout(1, 2));
+		
+		this.setLayout(new GridLayout(2, 1));
+
+		this.upperPanel = new JPanel();
+		upperPanel.setLayout(new GridLayout(1, 2));
+		this.add(upperPanel,BorderLayout.NORTH);
 
 		this.serviceId2ServicePanel = new HashMap<Integer, ServicePanel>();
 		/* The services */
@@ -70,8 +78,17 @@ public class TabelloneView extends JFrame {
 
 		updateViewOrder();
 
+		/*
+		 * The imagePanel
+		 * */
 		this.imagePanel = new ImagePanel(new ImageIcon("data/images/tabellone.JPG").getImage());
-		this.add(imagePanel, BorderLayout.EAST);
+		this.upperPanel.add(imagePanel, BorderLayout.EAST);
+		
+		/**
+		 * The news panel
+		 * */
+		this.newsPanel = new NewsPanel(new FeedMessage());
+		this.add(newsPanel, BorderLayout.SOUTH);
 	}
 
 	/**
@@ -102,9 +119,9 @@ public class TabelloneView extends JFrame {
 				this.leftPanel.add(machinePanel);
 			}
 		}
-		this.add(leftPanel, BorderLayout.WEST);// add the left panel to the frame
+		this.upperPanel.add(leftPanel, BorderLayout.WEST);// add the left panel to the frame
 
-		this.validate();//for rendering the new layout
+		this.leftPanel.validate();//for rendering the new layout
 	}
 
 	public void updateViewText(List<Service> services) {
@@ -118,9 +135,12 @@ public class TabelloneView extends JFrame {
 
 		// update each machine panel
 		for (MachinePanel machinePanel : this.machineId2MachinePanel.values()) {
-			//TODO: aggiornare anche la macchina
 			machinePanel.updateCurrentNumberText();
 		}
+	}
+
+	public void updateNewsPanel(FeedMessage feedMessage) {
+		this.newsPanel.updateText(feedMessage);
 	}
 
 }
