@@ -131,6 +131,7 @@ public class TabelloneView extends JFrame {
 //		this.upperPanel.add(leftPanel, BorderLayout.WEST);// add the left panel to the frame
 		this.add(leftPanel,BorderLayout.WEST);
 		this.leftPanel.validate();//for rendering the new layout
+		this.validate();
 	}
 
 	public void updateViewText(List<Service> services) {

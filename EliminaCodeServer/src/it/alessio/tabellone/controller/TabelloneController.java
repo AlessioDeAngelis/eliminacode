@@ -54,7 +54,7 @@ public class TabelloneController {
 				List<Service> services = repository.findAllServices();
 				FeedMessage feedMessage = this.feedController.giveNextMessage();
 				groupService2machines();
-				// this.tabelloneView.updateViewOrder();
+				 this.tabelloneView.updateViewOrder(services);
 				this.tabelloneView.updateViewText(services);
 				this.tabelloneView.updateViewOrder(services);
 				this.tabelloneView.updateNewsPanel(feedMessage);
