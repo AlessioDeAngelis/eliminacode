@@ -58,6 +58,7 @@ public class TabelloneController {
 				this.tabelloneView.updateViewText(services);
 				this.tabelloneView.updateViewOrder(services);
 				this.tabelloneView.updateNewsPanel(feedMessage);
+				this.tabelloneView.orderPanels();
 
 			}
 		}

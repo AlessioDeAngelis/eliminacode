@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class NewsPanel extends JPanel {
@@ -15,7 +16,7 @@ public class NewsPanel extends JPanel {
 	/**
 	 * The field that shows the number that is being served now
 	 * */
-	private JTextField newsTextField;
+	private JTextArea newsTextField;
 
 	public NewsPanel() {
 		super();
@@ -30,10 +31,10 @@ public class NewsPanel extends JPanel {
 	private void initComponents() {
 		this.setLayout(new GridLayout(1, 2));
 
-		this.newsTextField = new JTextField();
-		 this.newsTextField.setPreferredSize(new Dimension(50, 30));
-		this.newsTextField.setFont(new Font("SansSerif", Font.BOLD, 36));
-		this.newsTextField.setHorizontalAlignment(JTextField.CENTER);
+		this.newsTextField = new JTextArea();
+//		 this.newsTextField.setPreferredSize(new Dimension(500, 300));
+		this.newsTextField.setFont(new Font("SansSerif", Font.BOLD, 20));
+//		this.newsTextField.setHorizontalAlignment(JTextField.CENTER);
 		// this.currentNumberTextField.setLineWrap(true);
 		this.newsTextField.setText(feedMessage.getTitle() + "\n" + feedMessage.getDescription());
 		// this.currentNumberTextField.setBackground(Color.LIGHT_GRAY);
@@ -51,14 +52,6 @@ public class NewsPanel extends JPanel {
 
 	public void setFeedMessage(FeedMessage feedMessage) {
 		this.feedMessage = feedMessage;
-	}
-
-	public JTextField getNewsTextField() {
-		return newsTextField;
-	}
-
-	public void setNewsTextField(JTextField newsTextField) {
-		this.newsTextField = newsTextField;
 	}
 
 }
