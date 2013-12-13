@@ -10,9 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
 /**
  * It deals with the db and the CRUD operations
  * */
@@ -44,6 +41,32 @@ public class JDBCRepository {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void createHistoryLinesTable() {
+		DataSource ds = DataSource.getInstance();
+		Connection connection = ds.getConnection();
+		PreparedStatement statement = null;
+		try {
+			String query = "CREATE history_lines( id INT PRIMARY KEY, service_id INT, machine_id INT, date DATE)";
+			statement = connection.prepareStatement(query);
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	public void createMachineTable() {
@@ -208,7 +231,7 @@ public class JDBCRepository {
 		}
 
 		return machine;
-	}	
+	}
 
 	public List<Service> findAllServices() {
 		List<Service> services = new ArrayList<Service>();
@@ -295,7 +318,7 @@ public class JDBCRepository {
 			statement.setInt(2, service.getId());
 
 			int result = statement.executeUpdate();
-			if(result == 1){
+			if (result == 1) {
 				service.setCurrentNumber(lastCalledNumber);
 			}
 
@@ -349,5 +372,14 @@ public class JDBCRepository {
 		}
 		return machine;
 	}
+	
+	private java.util.Date sql2util(java.sql.Date data) {
+		return new java.util.Date(data.getTime());
+	}
+
+	private java.sql.Date util2sql(java.util.Date data) {
+		return new java.sql.Date(data.getTime());
+	}
+
 
 }

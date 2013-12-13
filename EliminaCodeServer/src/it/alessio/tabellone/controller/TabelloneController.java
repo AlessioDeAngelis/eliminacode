@@ -38,27 +38,30 @@ public class TabelloneController {
 		this.feedController = new FeedController(rssUrl);
 		loadServices();
 		groupService2machines();
-		this.tabelloneView = new TabelloneView(properties.getProperty("nome_azienda", "Tabellone"), model);
+		this.tabelloneView = new TabelloneView(model, properties);
 		// this.tabelloneView.updateViewText();
 		// Singleton.setTabelloneController(this);
 
 	}
 
 	public void mainLoop() {
+
 		while (true) {
 			try {
+				List<Service> services = repository.findAllServices();
+				FeedMessage feedMessage = this.feedController.giveNextMessage();
+				groupService2machines();
+				this.tabelloneView.orderPanels();
+				this.tabelloneView.playVideo(properties.getProperty("video_path"));
+				this.tabelloneView.updateViewOrder(services);
+				this.tabelloneView.updateViewText(services);
+				this.tabelloneView.updateViewOrder(services);
+				this.tabelloneView.updateNewsPanel(feedMessage);
+
 				Thread.sleep(4000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} finally {
-				List<Service> services = repository.findAllServices();
-				FeedMessage feedMessage = this.feedController.giveNextMessage();
-				groupService2machines();
-				 this.tabelloneView.updateViewOrder(services);
-				this.tabelloneView.updateViewText(services);
-				this.tabelloneView.updateViewOrder(services);
-				this.tabelloneView.updateNewsPanel(feedMessage);
-				this.tabelloneView.orderPanels();
 
 			}
 		}
