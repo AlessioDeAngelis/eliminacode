@@ -1,5 +1,6 @@
 package it.alessio.eliminacode.common.persistance;
 
+import it.alessio.eliminacode.common.model.HistoryLine;
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 
@@ -8,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,7 +50,7 @@ public class JDBCRepository {
 		Connection connection = ds.getConnection();
 		PreparedStatement statement = null;
 		try {
-			String query = "CREATE history_lines( id INT PRIMARY KEY, service_id INT, machine_id INT, date DATE)";
+			String query = "CREATE TABLE history_lines( id INT PRIMARY KEY, service_id INT, machine_id INT, timestamp DATE)";
 			statement = connection.prepareStatement(query);
 
 			statement.executeUpdate();
@@ -156,6 +158,71 @@ public class JDBCRepository {
 			}
 		}
 
+	}
+
+	public void persistHistoryLine(HistoryLine line) {
+		DataSource ds = DataSource.getInstance();
+		Connection connection = ds.getConnection();
+		PreparedStatement statement = null;
+		try {
+			String query = "INSERT INTO history_lines(id, service_id, machine_id, timestamp)" + " VALUES (?,?,?,?)";
+			statement = connection.prepareStatement(query);
+			long id = IdBroker.getId(connection);
+			line.setId(id);
+			statement.setLong(1, line.getId());
+			statement.setInt(2, line.getServiceId());
+			statement.setInt(3, line.getMachineId());
+			statement.setDate(4, this.util2sql(line.getTimestamp()));
+			statement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	public int countHistoryLinesByDate(Date date) {
+		DataSource ds = DataSource.getInstance();
+		Connection connection = ds.getConnection();
+		PreparedStatement statement = null;
+		int linesCount = 0;
+
+		try {
+			String query = "SELECT COUNT(*) as number FROM history_lines h WHERE h.timestamp = ? ";
+			statement = connection.prepareStatement(query);
+			statement.setDate(1, this.util2sql(date));
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				linesCount = result.getInt("number");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return linesCount;
 	}
 
 	public Service findServiceById(int id) {
@@ -271,6 +338,43 @@ public class JDBCRepository {
 		return services;
 	}
 
+	public List<HistoryLine> findAllHistoryLines() {
+		List<HistoryLine> lines = new ArrayList<HistoryLine>();
+		DataSource ds = DataSource.getInstance();
+		Connection connection = ds.getConnection();
+		PreparedStatement statement = null;
+		try {
+			String query = "SELECT * FROM history_lines";
+			statement = connection.prepareStatement(query);
+
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				HistoryLine line = new HistoryLine();
+				line.setId(result.getLong("id"));
+				line.setServiceId(result.getInt("service_id"));
+				line.setMachineId(result.getInt("machine_id"));
+				line.setTimestamp(this.sql2util(result.getDate("timestamp")));
+				lines.add(line);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return lines;
+	}
+
 	public List<Machine> findAllMachines() {
 		List<Machine> machines = new ArrayList<Machine>();
 		DataSource ds = DataSource.getInstance();
@@ -372,7 +476,7 @@ public class JDBCRepository {
 		}
 		return machine;
 	}
-	
+
 	private java.util.Date sql2util(java.sql.Date data) {
 		return new java.util.Date(data.getTime());
 	}
@@ -380,6 +484,5 @@ public class JDBCRepository {
 	private java.sql.Date util2sql(java.util.Date data) {
 		return new java.sql.Date(data.getTime());
 	}
-
 
 }

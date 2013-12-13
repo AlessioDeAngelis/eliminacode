@@ -1,5 +1,6 @@
 package it.alessio.tastierino.controller;
 
+import it.alessio.eliminacode.common.model.HistoryLine;
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
@@ -16,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -138,6 +140,19 @@ public class TastierinoController {
 			}
 			currentMachine = this.repository.updateMachine(currentMachine, nextNumberForService,serviceId);
 			Service serviceUpdated = this.repository.updateService(currentServiceOfTheMachine, ""+nextNumberForService);
+		
+			
+			//new history line
+			HistoryLine line = new HistoryLine();
+			line.setMachineId(currentMachine.getId());
+			line.setServiceId(serviceUpdated.getId());
+			GregorianCalendar gc = new GregorianCalendar();
+			gc.setTimeInMillis(System.currentTimeMillis());
+			line.setTimestamp(gc.getTime());			
+			//save the history line
+			this.repository.persistHistoryLine(line);
+			
+			//update the model according to the last changes
 			this.model.getId2service().put(serviceUpdated.getId(), serviceUpdated);
 			this.model.setCurrentMachine(currentMachine);
 			/**
