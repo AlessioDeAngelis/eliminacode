@@ -30,7 +30,6 @@ public class StartUpController {
 	private void createTables() {
 		this.repository.createServiceTable();
 		this.repository.createMachineTable();
-		this.repository.createHistoryLinesTable();
 	}
 
 	private void loadProperties() {

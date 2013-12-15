@@ -1,6 +1,6 @@
 package it.alessio.tastierino.controller;
 
-import it.alessio.eliminacode.common.model.HistoryLine;
+import it.alessio.eliminacode.common.model.HistoryLineJPA;
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
@@ -143,7 +143,7 @@ public class TastierinoController {
 		
 			
 			//new history line
-			HistoryLine line = new HistoryLine();
+			HistoryLineJPA line = new HistoryLineJPA();
 			line.setMachineId(currentMachine.getId());
 			line.setServiceId(serviceUpdated.getId());
 			GregorianCalendar gc = new GregorianCalendar();

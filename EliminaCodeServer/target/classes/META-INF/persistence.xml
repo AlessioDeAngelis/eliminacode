@@ -5,6 +5,7 @@
 	<persistence-unit name="eliminacode" transaction-type="RESOURCE_LOCAL">
 		<class>it.alessio.eliminacode.common.model.ServiceJPA</class>
 		<class>it.alessio.eliminacode.common.model.MachineJPA</class>
+		<class>it.alessio.eliminacode.common.model.HistoryLineJPA</class>
 
 		<properties>
 			<property name="javax.persistence.jdbc.url"

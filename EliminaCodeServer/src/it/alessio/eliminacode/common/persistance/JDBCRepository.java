@@ -1,6 +1,6 @@
 package it.alessio.eliminacode.common.persistance;
 
-import it.alessio.eliminacode.common.model.HistoryLine;
+import it.alessio.eliminacode.common.model.HistoryLineJPA;
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 
@@ -160,7 +160,7 @@ public class JDBCRepository {
 
 	}
 
-	public void persistHistoryLine(HistoryLine line) {
+	public void persistHistoryLine(HistoryLineJPA line) {
 		DataSource ds = DataSource.getInstance();
 		Connection connection = ds.getConnection();
 		PreparedStatement statement = null;
@@ -338,8 +338,8 @@ public class JDBCRepository {
 		return services;
 	}
 
-	public List<HistoryLine> findAllHistoryLines() {
-		List<HistoryLine> lines = new ArrayList<HistoryLine>();
+	public List<HistoryLineJPA> findAllHistoryLines() {
+		List<HistoryLineJPA> lines = new ArrayList<HistoryLineJPA>();
 		DataSource ds = DataSource.getInstance();
 		Connection connection = ds.getConnection();
 		PreparedStatement statement = null;
@@ -349,7 +349,7 @@ public class JDBCRepository {
 
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
-				HistoryLine line = new HistoryLine();
+				HistoryLineJPA line = new HistoryLineJPA();
 				line.setId(result.getLong("id"));
 				line.setServiceId(result.getInt("service_id"));
 				line.setMachineId(result.getInt("machine_id"));
