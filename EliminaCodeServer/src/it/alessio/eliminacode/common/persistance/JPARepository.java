@@ -7,6 +7,7 @@ import it.alessio.eliminacode.common.model.ServiceJPA;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -36,11 +37,38 @@ public class JPARepository {
 		return line;
 	}
 	
+	public List<HistoryLineJPA> retrieveHistoryLinesByDate(int day, int month, int year){
+		List<HistoryLineJPA> lines = new ArrayList<HistoryLineJPA>();
+		EntityManager entityManager = SingletonEMF.get().createEntityManager();
+		entityManager.getTransaction().begin();
+		String update = "SELECT s from HistoryLineJPA s WHERE s.day = :day AND s.month = :month AND s.anno = :anno";
+
+		Query query = entityManager.createQuery(update);
+		query.setParameter("day", day);
+		query.setParameter("month",month);
+		query.setParameter("anno", year);
+		lines = query.getResultList();
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		return lines;
+	}
+	
 	public List<HistoryLineJPA> retrieveAllHistoryLines() {
 		List<HistoryLineJPA> lines = new ArrayList<HistoryLineJPA>();
 		EntityManager entityManager = SingletonEMF.get().createEntityManager();
 		entityManager.getTransaction().begin();
 		Query q = entityManager.createQuery("select m from HistoryLineJPA m");
+		lines = q.getResultList();
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		return lines;
+	}
+	
+	public List<Date> retrieveAllDatesFromHistoryLines() {
+		List<Date> lines = new ArrayList<Date>();
+		EntityManager entityManager = SingletonEMF.get().createEntityManager();
+		entityManager.getTransaction().begin();
+		Query q = entityManager.createQuery("SELECT DISTINCT m.timestamp FROM HistoryLineJPA m ORDER BY m.timestamp DESC");
 		lines = q.getResultList();
 		entityManager.getTransaction().commit();
 		entityManager.close();

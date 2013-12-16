@@ -42,8 +42,8 @@ public class JpaRepositoryTest {
 	public void persistTest(){
 		HistoryLineJPA line = new HistoryLineJPA();
 		GregorianCalendar calendar = new GregorianCalendar();
-		calendar.setTimeInMillis(System.currentTimeMillis());
-//		calendar.set(2013, 12, 13);
+//		calendar.setTimeInMillis(System.currentTimeMillis());
+		calendar.set(2011, 11, 24);
 //		line.setDayMonthYear(calendar.getTime());
 		line.setTimestamp(calendar.getTime());
 		line.setDay(calendar.get(GregorianCalendar.DAY_OF_MONTH));
@@ -56,6 +56,13 @@ public class JpaRepositoryTest {
 	}
 	
 	@Test
+	public void retrieveAllDatesFromHistoryLinesTest(){
+		List<Date> dd = r.retrieveAllDatesFromHistoryLines();
+		for(Date d : dd){
+			System.out.println(d);
+		}
+	}
+//	@Test
 	public void retrieveAllDatesTest(){
 		List<HistoryLineJPA> lines = r.retrieveAllHistoryLines();
 		for(HistoryLineJPA line : lines){
