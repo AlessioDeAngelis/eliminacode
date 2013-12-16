@@ -45,19 +45,19 @@ public class TabelloneController {
 	}
 
 	public void mainLoop() {
-
+		this.tabelloneView.orderPanels();
+		this.tabelloneView.playVideo(properties.getProperty("video_path"));
 		while (true) {
 			try {
 				List<Service> services = repository.findAllServices();
 				FeedMessage feedMessage = this.feedController.giveNextMessage();
 				groupService2machines();
-				this.tabelloneView.orderPanels();
-				this.tabelloneView.playVideo(properties.getProperty("video_path"));
+//				this.tabelloneView.orderPanels();
+//				this.tabelloneView.playVideo(properties.getProperty("video_path"));
 				this.tabelloneView.updateViewOrder(services);
 				this.tabelloneView.updateViewText(services);
 				this.tabelloneView.updateViewOrder(services);
 				this.tabelloneView.updateNewsPanel(feedMessage);
-
 				Thread.sleep(4000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();

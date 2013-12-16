@@ -122,8 +122,7 @@ public class TabelloneView extends JFrame {
 		 * */
 		this.videoPanel = new VideoPanel(this.properties.getProperty("vlc_path"));
 		
-		//Resize the frame
-		this.pack();
+
 	}
 
 	/**
