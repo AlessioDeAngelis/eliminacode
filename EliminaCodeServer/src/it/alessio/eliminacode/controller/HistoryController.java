@@ -67,18 +67,18 @@ public class HistoryController {
 			
 			for(Integer serviceId : serviceIds.elementSet()){
 				int count = serviceIds.count(serviceId);
-				text.append("SERVIZIO " + serviceId + " ha servito " + count + " clienti \n");
+				text.append("SERVIZIO " + (serviceId +1) + " ha servito " + count + " clienti \n");
 			}
 			
 			text.append("\n");
 			
 			for(Integer machineId : machine2service.keySet()){
-				text.append("OPERATORE " + machineId + ": \n");
+				text.append("OPERATORE " + (machineId+1) + ": \n");
 				List<Integer> tmp =  machine2service.get(machineId);
 				Multiset<Integer> allServiceIds = HashMultiset.create(tmp);
 				for(Integer serId : allServiceIds.elementSet()){
 					int count = allServiceIds.count(serId);
-					text.append("\t ha servito " + count + " clienti nel SERVIZIO " + serId +"\n");
+					text.append("\t ha servito " + count + " clienti nel SERVIZIO " + (serId +1) +"\n");
 				}
 			}		
 		

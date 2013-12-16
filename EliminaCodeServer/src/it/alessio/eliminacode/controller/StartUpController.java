@@ -2,6 +2,7 @@ package it.alessio.eliminacode.controller;
 
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.persistance.JDBCRepository;
+import it.alessio.eliminacode.common.persistance.JPARepository;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,7 +14,7 @@ import java.util.Properties;
  * */
 public class StartUpController {
 	private JDBCRepository repository;
-
+	private JPARepository jpaRepository;
 	private Properties properties;
 
 	public StartUpController() {

@@ -160,38 +160,6 @@ public class JDBCRepository {
 
 	}
 
-	public void persistHistoryLine(HistoryLineJPA line) {
-		DataSource ds = DataSource.getInstance();
-		Connection connection = ds.getConnection();
-		PreparedStatement statement = null;
-		try {
-			String query = "INSERT INTO history_lines(id, service_id, machine_id, timestamp)" + " VALUES (?,?,?,?)";
-			statement = connection.prepareStatement(query);
-			long id = IdBroker.getId(connection);
-			line.setId(id);
-			statement.setLong(1, line.getId());
-			statement.setInt(2, line.getServiceId());
-			statement.setInt(3, line.getMachineId());
-			statement.setDate(4, this.util2sql(line.getTimestamp()));
-			statement.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-
-			try {
-				if (statement != null)
-					statement.close();
-				if (connection != null)
-					connection.close();
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
-
 	public int countHistoryLinesByDate(Date date) {
 		DataSource ds = DataSource.getInstance();
 		Connection connection = ds.getConnection();

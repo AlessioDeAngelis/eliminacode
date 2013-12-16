@@ -5,6 +5,7 @@ import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
 import it.alessio.eliminacode.common.persistance.JDBCRepository;
+import it.alessio.eliminacode.common.persistance.JPARepository;
 import it.alessio.eliminacode.common.sound.MusicPlayer;
 import it.alessio.tastierino.controller.listeners.NextButtonListener;
 import it.alessio.tastierino.controller.listeners.NumButtonListener;
@@ -30,6 +31,7 @@ public class TastierinoController {
 	private TastierinoModel model;
 	// private TabelloneView tabelloneView;
 	private JDBCRepository repository;
+	private JPARepository jpaRepository;
 	private TastierinoView tastierinoView;
 	private Map<Integer, TastierinoView> machineId2TastierinoView;
 	private Properties properties;
@@ -38,6 +40,7 @@ public class TastierinoController {
 		initProperties();
 		this.model = new TastierinoModel();
 		this.repository = new JDBCRepository();
+		this.jpaRepository = new JPARepository();
 		this.machineId2TastierinoView = new HashMap<Integer, TastierinoView>();
 //		initializeServices();
 		loadServices();
@@ -148,9 +151,12 @@ public class TastierinoController {
 			line.setServiceId(serviceUpdated.getId());
 			GregorianCalendar gc = new GregorianCalendar();
 			gc.setTimeInMillis(System.currentTimeMillis());
-			line.setTimestamp(gc.getTime());			
+			line.setTimestamp(gc.getTime());
+			line.setDay(gc.get(GregorianCalendar.DAY_OF_MONTH));
+			line.setMonth(gc.get(GregorianCalendar.MONTH));
+			line.setAnno(gc.get(GregorianCalendar.YEAR));
 			//save the history line
-			this.repository.persistHistoryLine(line);
+			this.jpaRepository.persistHistoryLine(line);
 			
 			//update the model according to the last changes
 			this.model.getId2service().put(serviceUpdated.getId(), serviceUpdated);
