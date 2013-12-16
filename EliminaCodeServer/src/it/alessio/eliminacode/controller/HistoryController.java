@@ -34,7 +34,17 @@ public class HistoryController {
 	}
 
 	public void initialize() {
-		this.dates = this.repository.retrieveAllDatesFromHistoryLines();
+		List<Date> tmp = this.repository.retrieveAllDatesFromHistoryLines();
+		this.dates = new ArrayList<Date>();
+		int limit = 0;
+		if(tmp.size()>500){
+			limit = 500;
+		}else{
+			limit = tmp.size();
+		}
+		for (int i = 0; i < limit; i++) {
+			this.dates.add(tmp.get(i));
+		}
 	}
 
 	public void calculateStatistics() {
@@ -51,37 +61,37 @@ public class HistoryController {
 
 			// a partire dalla data, voglio sapere il servizio quanto ha
 			// lavorato, un impiegato quanto ha lavorato e in quali servizi
-			
+
 			StringBuilder text = new StringBuilder();
-			
+			text.append("STATISTICHE DEL GIORNO: " + selectedValue + "\n\n\n");
 			Multiset<Integer> serviceIds = HashMultiset.create();
-			ListMultimap<Integer,Integer> machine2service = ArrayListMultimap.create();
-			//take all the ids(machine and service)
-			for(HistoryLineJPA line : this.lines){
+			ListMultimap<Integer, Integer> machine2service = ArrayListMultimap.create();
+			// take all the ids(machine and service)
+			for (HistoryLineJPA line : this.lines) {
 				int machineId = line.getMachineId();
 				int serviceId = line.getServiceId();
 				serviceIds.add(serviceId);
-//				machine2line.put(machineId, line);
-				machine2service.put(machineId,serviceId);
+				// machine2line.put(machineId, line);
+				machine2service.put(machineId, serviceId);
 			}
-			
-			for(Integer serviceId : serviceIds.elementSet()){
+
+			for (Integer serviceId : serviceIds.elementSet()) {
 				int count = serviceIds.count(serviceId);
-				text.append("SERVIZIO " + (serviceId +1) + " ha servito " + count + " clienti \n");
+				text.append("SERVIZIO " + (serviceId + 1) + " ha servito un totale di " + count + " clienti \n");
 			}
-			
+
 			text.append("\n");
-			
-			for(Integer machineId : machine2service.keySet()){
-				text.append("OPERATORE " + (machineId+1) + ": \n");
-				List<Integer> tmp =  machine2service.get(machineId);
+
+			for (Integer machineId : machine2service.keySet()) {
+				text.append("OPERATORE " + (machineId + 1) + ": \n");
+				List<Integer> tmp = machine2service.get(machineId);
 				Multiset<Integer> allServiceIds = HashMultiset.create(tmp);
-				for(Integer serId : allServiceIds.elementSet()){
+				for (Integer serId : allServiceIds.elementSet()) {
 					int count = allServiceIds.count(serId);
-					text.append("\t ha servito " + count + " clienti nel SERVIZIO " + (serId +1) +"\n");
+					text.append("\t ha servito " + count + " clienti nel SERVIZIO " + (serId + 1) + "\n");
 				}
-			}		
-		
+			}
+
 			// notify the view
 			this.view.updateText(text.toString());
 		}

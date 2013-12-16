@@ -38,10 +38,14 @@ public class DataSource {
 		} catch (IOException e) {
 			logger.severe("Error loading the Data Source property file: "+ e.getMessage());
 		}			
-		String uri = conf.getProperty("uri");
-		String password = conf.getProperty("password");
-		String username = conf.getProperty("username");
-		String driver = conf.getProperty("driver");
+//		String uri = conf.getProperty("uri");
+//		String password = conf.getProperty("password");
+//		String username = conf.getProperty("username");
+//		String driver = conf.getProperty("driver");
+		String uri = "jdbc:derby://localhost:1527/c:/eliminacode/db/eliminacode;create=true";
+		String password = "app";
+		String username = "app";
+		String driver = "org.apache.derby.jdbc.ClientDriver";
 		
 		this.cpds = new ComboPooledDataSource();
 		try {

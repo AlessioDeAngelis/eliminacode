@@ -69,7 +69,6 @@ public class TabelloneView extends JFrame {
 	}
 
 	private void initComponents() {
-
 		// this.setLayout(new GridBagLayout());
 
 		this.upperPanel = new JPanel();
@@ -229,7 +228,7 @@ public class TabelloneView extends JFrame {
 		pane.add(this.leftPanel, BorderLayout.LINE_START);
 		this.leftPanel.setPreferredSize(new Dimension(800, 800));
 		pane.add(this.videoPanel, BorderLayout.LINE_END);
-		this.videoPanel.setPreferredSize(new Dimension(400,400));
+		this.videoPanel.setPreferredSize(new Dimension(500,500));
 		this.videoPanel.validate();
 
 		pane.add(this.newsPanel, BorderLayout.PAGE_END);

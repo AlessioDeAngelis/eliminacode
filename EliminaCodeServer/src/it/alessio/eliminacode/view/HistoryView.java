@@ -56,7 +56,7 @@ public class HistoryView extends JFrame{
 		list.setLayoutOrientation(JList.VERTICAL);
 		list.setVisibleRowCount(-1);
 		JScrollPane listScroller = new JScrollPane(list);
-		listScroller.setPreferredSize(new Dimension(250, 120));
+		listScroller.setPreferredSize(new Dimension(250, 600));
 		this.setLayout(new FlowLayout());
 		this.add(listScroller);
 		
@@ -65,7 +65,7 @@ public class HistoryView extends JFrame{
 		this.textArea.setText("");
 		this.textArea.setAutoscrolls(true);
 		this.textArea.setLineWrap(true);
-		this.textArea.setPreferredSize(new Dimension(500,500));
+		this.textArea.setPreferredSize(new Dimension(900,600));
 		this.textArea.setFont(new Font("SansSerif", Font.BOLD, 16));
 
 		this.add(this.textArea);

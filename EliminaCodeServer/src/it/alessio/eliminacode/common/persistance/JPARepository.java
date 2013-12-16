@@ -57,7 +57,7 @@ public class JPARepository {
 		List<HistoryLineJPA> lines = new ArrayList<HistoryLineJPA>();
 		EntityManager entityManager = SingletonEMF.get().createEntityManager();
 		entityManager.getTransaction().begin();
-		Query q = entityManager.createQuery("select m from HistoryLineJPA m");
+		Query q = entityManager.createQuery("select m from HistoryLineJPA m ");
 		lines = q.getResultList();
 		entityManager.getTransaction().commit();
 		entityManager.close();

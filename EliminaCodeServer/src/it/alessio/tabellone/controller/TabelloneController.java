@@ -53,7 +53,7 @@ public class TabelloneController {
 				FeedMessage feedMessage = this.feedController.giveNextMessage();
 				groupService2machines();
 //				this.tabelloneView.orderPanels();
-//				this.tabelloneView.playVideo(properties.getProperty("video_path"));
+				this.tabelloneView.playVideo(properties.getProperty("video_path"));
 				this.tabelloneView.updateViewOrder(services);
 				this.tabelloneView.updateViewText(services);
 				this.tabelloneView.updateViewOrder(services);
