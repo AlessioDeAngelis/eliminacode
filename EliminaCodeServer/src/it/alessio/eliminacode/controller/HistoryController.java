@@ -78,7 +78,7 @@ public class HistoryController {
 				Multiset<Integer> allServiceIds = HashMultiset.create(tmp);
 				for(Integer serId : allServiceIds.elementSet()){
 					int count = allServiceIds.count(serId);
-					text.append("\t ha servito n:" + count + " clienti nel SERVIZIO " + serId +"\n");
+					text.append("\t ha servito " + count + " clienti nel SERVIZIO " + serId +"\n");
 				}
 			}		
 		
