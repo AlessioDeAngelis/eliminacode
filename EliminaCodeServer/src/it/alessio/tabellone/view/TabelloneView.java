@@ -6,17 +6,28 @@ import it.alessio.eliminacode.common.model.TastierinoModel;
 import it.alessio.eliminacode.common.persistance.JDBCRepository;
 import it.alessio.eliminacode.common.util.ColorFactory;
 import it.alessio.tabellone.news.FeedMessage;
+import it.alessio.tabellone.view.panels.ImagePanel;
+import it.alessio.tabellone.view.panels.MachinePanel;
+import it.alessio.tabellone.view.panels.NewsPanel;
+import it.alessio.tabellone.view.panels.ServicePanel;
+import it.alessio.tabellone.view.panels.VideoPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -39,34 +50,37 @@ public class TabelloneView extends JFrame {
 	private Map<Integer, MachinePanel> machineId2MachinePanel;
 	private JPanel leftPanel;
 	private ImagePanel imagePanel;
+	private VideoPanel videoPanel;
 	private NewsPanel newsPanel;
 	private JPanel upperPanel;
 	private Map<Integer, List<MachinePanel>> serviceId2MachinePanel;
+	private Properties properties;
 
-	public TabelloneView(String title, TastierinoModel model) {
-		super(title);
+	public TabelloneView(TastierinoModel model,Properties properties) {
+		super(properties.getProperty("nome_azienda", "Tabellone"));
+		this.properties = properties;
 		this.model = model;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(500, 500);
 		this.getContentPane().setBackground(Color.black);
 		this.setVisible(true);
 		initComponents();
+		this.validate();//TODO: maybe delete it
 	}
 
 	private void initComponents() {
-		
-		this.setLayout(new GridLayout(1, 2));
+
+		// this.setLayout(new GridBagLayout());
 
 		this.upperPanel = new JPanel();
 		upperPanel.setLayout(new GridLayout(2, 1));
-//		this.add(upperPanel,BorderLayout.NORTH);
-
+		// this.add(upperPanel,BorderLayout.NORTH);
 		this.serviceId2ServicePanel = new HashMap<Integer, ServicePanel>();
 		/* The services */
 		for (Service service : this.model.getId2service().values()) {
 			ServicePanel servicePanel = new ServicePanel(model, service, ColorFactory.getColor(service.getColor()));
 			this.serviceId2ServicePanel.put(service.getId(), servicePanel);
-			
+
 		}
 		/* The machine panels */
 		this.machineId2MachinePanel = new HashMap<Integer, MachinePanel>();
@@ -78,35 +92,48 @@ public class TabelloneView extends JFrame {
 		}
 
 		List<Service> services = new ArrayList<Service>();
-		for(Service service : this.model.getId2service().values()){
+		for (Service service : this.model.getId2service().values()) {
 			services.add(service);
 		}
+
+		/**
+		 * The left panel
+		 * */
+		this.leftPanel = new JPanel();
+		this.leftPanel.setBackground(Color.black);
+		this.leftPanel.setLayout(new GridLayout(10, 1));
 		updateViewOrder(services);
 
 		/*
 		 * The imagePanel
-		 * */
+		 */
 		this.imagePanel = new ImagePanel(new ImageIcon("data/images/tabellone.JPG").getImage());
-//		this.upperPanel.add(imagePanel, BorderLayout.EAST);
-		this.add(imagePanel,BorderLayout.EAST);
-		
+		// this.upperPanel.add(imagePanel, BorderLayout.EAST);
+		// this.add(imagePanel, BorderLayout.EAST);
+
 		/**
 		 * The news panel
 		 * */
 		this.newsPanel = new NewsPanel(new FeedMessage());
-//		this.add(newsPanel, BorderLayout.SOUTH);
+		// this.add(newsPanel, BorderLayout.SOUTH);
+
+		/**
+		 * The video Panel
+		 * */
+		this.videoPanel = new VideoPanel(this.properties.getProperty("vlc_path"));
+		
+		//Resize the frame
+		this.pack();
 	}
 
 	/**
 	 * Update the order of the various machine panels according to the service
 	 * */
 	public void updateViewOrder(List<Service> allServices) {
-		if (leftPanel != null) {
-			this.remove(leftPanel);
-		}
-		this.leftPanel = new JPanel();
-		this.leftPanel.setBackground(Color.black);
-		this.leftPanel.setLayout(new GridLayout(10, 1));
+		// if (leftPanel != null) {
+		// this.remove(leftPanel);
+		// }
+
 		Map<Integer, List<Machine>> service2machines = this.model.getService2machines();
 		for (Service service : allServices) {
 			int serviceId = service.getId();
@@ -128,16 +155,18 @@ public class TabelloneView extends JFrame {
 				}
 			}
 		}
-//		this.upperPanel.add(leftPanel, BorderLayout.WEST);// add the left panel to the frame
-		this.add(leftPanel,BorderLayout.WEST);
-		this.leftPanel.validate();//for rendering the new layout
+		// this.upperPanel.add(leftPanel, BorderLayout.WEST);// add the left
+		// panel to the frame
+		// this.add(leftPanel, BorderLayout.WEST);
+		this.leftPanel.validate();// for rendering the new layout
+		this.validate();
 	}
 
 	public void updateViewText(List<Service> services) {
-		//update each servicePanel
+		// update each servicePanel
 		Set<Integer> serviceIds = this.model.getId2service().keySet();
 		JDBCRepository r = new JDBCRepository();
-		for(Service service : services){
+		for (Service service : services) {
 			ServicePanel servicePanel = this.serviceId2ServicePanel.get(service.getId());
 			servicePanel.updateLastNumberTextField(service.getCurrentNumber());
 		}
@@ -151,5 +180,66 @@ public class TabelloneView extends JFrame {
 	public void updateNewsPanel(FeedMessage feedMessage) {
 		this.newsPanel.updateText(feedMessage);
 	}
+
+	public void orderPanels4() {
+		this.setLayout(new GridBagLayout());
+		Container pane = this.getContentPane();
+		GridBagConstraints c = new GridBagConstraints();
+		// left panel
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.ipady = 400; // make this component tall
+		c.ipadx = 1250; // make this component tall
+
+		c.gridy = 0;
+		// c.insets = new Insets(50, 50, 50, 50); //top padding
+		// c.weightx = 0.5;
+		JButton button = new JButton("1");
+		// pane.add(button,c);
+		pane.add(this.leftPanel, c);
+		// right panel (image or video)
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 2;// third column
+		c.gridy = 0;
+		c.ipady = 0;
+		c.ipadx = 0; // make this component tall
+
+		// c.weightx = 0.5;
+		// button = new JButton("2");
+		// pane.add(button,c);
+
+		pane.add(this.imagePanel, c);
+		// news panel
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 2;// third row
+		c.ipady = 500;
+		c.ipadx = 500;
+		c.anchor = GridBagConstraints.SOUTH; // bottom of space
+		// c.weightx = 0.5;
+		// pane.add(button, c);
+
+		pane.add(this.newsPanel, c);
+
+	}
+
+	public void orderPanels() {
+		this.setLayout(new BorderLayout());
+		Container pane = this.getContentPane();
+
+		pane.add(this.leftPanel, BorderLayout.LINE_START);
+		this.leftPanel.setPreferredSize(new Dimension(800, 800));
+		pane.add(this.videoPanel, BorderLayout.LINE_END);
+		this.videoPanel.setPreferredSize(new Dimension(400,400));
+		this.videoPanel.validate();
+
+		pane.add(this.newsPanel, BorderLayout.PAGE_END);
+	}
+	
+	public void playVideo(String videoPath){
+
+	this.videoPanel.play(videoPath);
+	}
+
 
 }

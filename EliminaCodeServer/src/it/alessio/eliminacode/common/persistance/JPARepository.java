@@ -1,26 +1,81 @@
 package it.alessio.eliminacode.common.persistance;
 
+import it.alessio.eliminacode.common.model.HistoryLineJPA;
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
+import it.alessio.eliminacode.common.model.ServiceJPA;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
-
-import java.sql.Connection;
 
 /**
  * It deals with the db and the CRUD operations
  * */
-public class Repository {
-	public Repository() {
+public class JPARepository {
+	public JPARepository() {
+	}
+	
+	public void persistHistoryLine(HistoryLineJPA line){
+		EntityManager entityManager = SingletonEMF.get().createEntityManager();
+		entityManager.getTransaction().begin();
+		entityManager.persist(line);
+		entityManager.getTransaction().commit();
+		entityManager.close();
+	}
+	
+	public HistoryLineJPA retrieveHistoryLineById(long id){
+		EntityManager entityManager = SingletonEMF.get().createEntityManager();
+		entityManager.getTransaction().begin();
+		HistoryLineJPA line = entityManager.find(HistoryLineJPA.class, id);
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		return line;
+	}
+	
+	public List<HistoryLineJPA> retrieveHistoryLinesByDate(int day, int month, int year){
+		List<HistoryLineJPA> lines = new ArrayList<HistoryLineJPA>();
+		EntityManager entityManager = SingletonEMF.get().createEntityManager();
+		entityManager.getTransaction().begin();
+		String update = "SELECT s from HistoryLineJPA s WHERE s.day = :day AND s.month = :month AND s.anno = :anno";
+
+		Query query = entityManager.createQuery(update);
+		query.setParameter("day", day);
+		query.setParameter("month",month);
+		query.setParameter("anno", year);
+		lines = query.getResultList();
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		return lines;
+	}
+	
+	public List<HistoryLineJPA> retrieveAllHistoryLines() {
+		List<HistoryLineJPA> lines = new ArrayList<HistoryLineJPA>();
+		EntityManager entityManager = SingletonEMF.get().createEntityManager();
+		entityManager.getTransaction().begin();
+		Query q = entityManager.createQuery("select m from HistoryLineJPA m");
+		lines = q.getResultList();
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		return lines;
+	}
+	
+	public List<Date> retrieveAllDatesFromHistoryLines() {
+		List<Date> lines = new ArrayList<Date>();
+		EntityManager entityManager = SingletonEMF.get().createEntityManager();
+		entityManager.getTransaction().begin();
+		Query q = entityManager.createQuery("SELECT DISTINCT m.timestamp FROM HistoryLineJPA m ORDER BY m.timestamp DESC");
+		lines = q.getResultList();
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		return lines;
 	}
 
-	public void persistService(Service service) {
+	public void persistService(ServiceJPA service) {
 		EntityManager entityManager = SingletonEMF.get().createEntityManager();
 		entityManager.getTransaction().begin();
 		entityManager.persist(service);

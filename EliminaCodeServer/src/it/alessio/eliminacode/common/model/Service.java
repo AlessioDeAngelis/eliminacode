@@ -1,7 +1,6 @@
 package it.alessio.eliminacode.common.model;
 
 import it.alessio.tabellone.controller.TabelloneController;
-import it.alessio.tabellone.listeners.ServiceEntityListener;
 
 import java.io.Serializable;
 

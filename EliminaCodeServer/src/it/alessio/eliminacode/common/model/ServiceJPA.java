@@ -1,7 +1,6 @@
 package it.alessio.eliminacode.common.model;
 
 import it.alessio.tabellone.controller.TabelloneController;
-import it.alessio.tabellone.listeners.ServiceEntityListener;
 
 import java.io.Serializable;
 
@@ -15,7 +14,6 @@ import javax.persistence.Id;
  * This class represent a service, a queue *
  */
 @Entity
-@EntityListeners({ServiceEntityListener.class})
 public class ServiceJPA implements Serializable {
 
 	private static final long serialVersionUID = 1L;

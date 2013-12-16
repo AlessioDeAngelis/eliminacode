@@ -1,4 +1,4 @@
-package it.alessio.tabellone.view;
+package it.alessio.tabellone.view.panels;
 
 import java.awt.Dimension;
 import java.awt.Graphics;

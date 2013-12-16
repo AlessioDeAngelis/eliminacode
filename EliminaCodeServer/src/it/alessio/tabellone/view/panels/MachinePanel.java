@@ -1,4 +1,4 @@
-package it.alessio.tabellone.view;
+package it.alessio.tabellone.view.panels;
 
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;

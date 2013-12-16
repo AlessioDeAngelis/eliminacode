@@ -2,7 +2,7 @@ package it.alessio.tastierino.persistance;
 
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
-import it.alessio.eliminacode.common.persistance.Repository;
+import it.alessio.eliminacode.common.persistance.JPARepository;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class RepositoryTest {
 	
 	@Test
 	public void findAllServiceTest(){
-		Repository r = new Repository();
+		JPARepository r = new JPARepository();
 		List<Service> services = r.findAllServices();
 		for(Service s : services){
 			System.out.println(s.toString());
@@ -21,7 +21,7 @@ public class RepositoryTest {
 	
 	@Test
 	public void findAllMachineTest(){
-		Repository r = new Repository();
+		JPARepository r = new JPARepository();
 		List<Machine> machines = r.findAllMachines();
 		for(Machine m : machines){
 			System.out.println(m);
