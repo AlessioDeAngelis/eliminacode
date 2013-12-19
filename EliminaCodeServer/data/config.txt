@@ -10,4 +10,5 @@ nome_servizio3=F3
 nome_servizio4=F4
 rss_url=http://ansa.feedsportal.com/c/34225/f/621689/index.rss
 vlc_path=C:/Program Files/VideoLAN/VLC
-video_path=http://www.engr.colostate.edu/me/facil/dynamics/files/bird.avi
+video_path1=http://www.engr.colostate.edu/me/facil/dynamics/files/bird.avi
+video_path=data/video.avi

@@ -3,7 +3,9 @@ package it.alessio.tabellone.controller;
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
+import it.alessio.eliminacode.common.model.comparator.MachineComparator;
 import it.alessio.eliminacode.common.persistance.JDBCRepository;
+import it.alessio.eliminacode.common.sound.MusicPlayer;
 import it.alessio.tabellone.news.FeedController;
 import it.alessio.tabellone.news.FeedMessage;
 import it.alessio.tabellone.view.TabelloneView;
@@ -13,6 +15,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,18 +51,44 @@ public class TabelloneController {
 	public void mainLoop() {
 		this.tabelloneView.orderPanels();
 		this.tabelloneView.playVideo(properties.getProperty("video_path"));
+
+		int timeLeftToUpdateFeed = 4;
+		Map<Integer,Integer> service2lastNumberCalled = new HashMap<Integer,Integer>();
+		List<Service> services = repository.findAllServices();
+		for(Service service : services){
+//			if(Integer.parseInt(service.getCurrentNumber())){
+			service2lastNumberCalled.put(service.getId(), Integer.parseInt(service.getCurrentNumber()));
+//			}
+		}
+		
 		while (true) {
 			try {
-				List<Service> services = repository.findAllServices();
+				services = repository.findAllServices();
+				for(Service service : services){
+					int currentNumber = Integer.parseInt(service.getCurrentNumber());
+					int prevNumber = service2lastNumberCalled.get(service.getId());
+					if(currentNumber != prevNumber){
+						//play sound once
+						MusicPlayer.playSound("data/sounds/coin.wav");
+						break;
+					}
+				}
 				FeedMessage feedMessage = this.feedController.giveNextMessage();
 				groupService2machines();
-//				this.tabelloneView.orderPanels();
-				this.tabelloneView.playVideo(properties.getProperty("video_path"));
 				this.tabelloneView.updateViewOrder(services);
 				this.tabelloneView.updateViewText(services);
 				this.tabelloneView.updateViewOrder(services);
-				this.tabelloneView.updateNewsPanel(feedMessage);
-				Thread.sleep(4000);
+				if (timeLeftToUpdateFeed < 0) {
+					this.tabelloneView.updateNewsPanel(feedMessage);
+					timeLeftToUpdateFeed = 4;
+				} else {
+					timeLeftToUpdateFeed--;
+				}
+				//Update last number for service
+				for(Service service : services){
+					service2lastNumberCalled.put(service.getId(), Integer.parseInt(service.getCurrentNumber()));
+				}
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} finally {
@@ -95,6 +125,7 @@ public class TabelloneController {
 		this.model.setMachines(machines);
 	}
 
+	// TODO: ordinare in base al numero in ordine crescente
 	private void groupService2machines() {
 		this.loadMachines();
 
@@ -111,6 +142,10 @@ public class TabelloneController {
 			machinesTmp.add(machine);
 			service2machines.put(serviceId, machinesTmp);
 		}
+		for (List<Machine> tmp : service2machines.values()) {
+			Collections.sort(tmp, new MachineComparator());
+		}
+
 		this.model.setService2machines(service2machines);
 	}
 

@@ -179,7 +179,6 @@ public class TastierinoController {
 			 * ==================
 			 * */
 			// notify the view about the change
-			MusicPlayer.playSound("data/sounds/coin.wav");
 			// this.tabelloneView.updateViewText();
 			
 

@@ -39,6 +39,7 @@ import javax.swing.JPanel;
  SO it controls user input and output
 
  */
+//TODO: audio viene fatto partire dal tabellone solo dopo che il tabellone abbia correttamente visualizzato i cambi
 public class TabelloneView extends JFrame {
 
 	/**
@@ -56,7 +57,7 @@ public class TabelloneView extends JFrame {
 	private Map<Integer, List<MachinePanel>> serviceId2MachinePanel;
 	private Properties properties;
 
-	public TabelloneView(TastierinoModel model,Properties properties) {
+	public TabelloneView(TastierinoModel model, Properties properties) {
 		super(properties.getProperty("nome_azienda", "Tabellone"));
 		this.properties = properties;
 		this.model = model;
@@ -65,7 +66,7 @@ public class TabelloneView extends JFrame {
 		this.getContentPane().setBackground(Color.black);
 		this.setVisible(true);
 		initComponents();
-		this.validate();//TODO: maybe delete it
+		this.validate();// TODO: maybe delete it
 	}
 
 	private void initComponents() {
@@ -120,7 +121,6 @@ public class TabelloneView extends JFrame {
 		 * The video Panel
 		 * */
 		this.videoPanel = new VideoPanel(this.properties.getProperty("vlc_path"));
-		
 
 	}
 
@@ -228,16 +228,15 @@ public class TabelloneView extends JFrame {
 		pane.add(this.leftPanel, BorderLayout.LINE_START);
 		this.leftPanel.setPreferredSize(new Dimension(800, 800));
 		pane.add(this.videoPanel, BorderLayout.LINE_END);
-		this.videoPanel.setPreferredSize(new Dimension(500,500));
+		this.videoPanel.setPreferredSize(new Dimension(500, 500));
 		this.videoPanel.validate();
 
 		pane.add(this.newsPanel, BorderLayout.PAGE_END);
 	}
-	
-	public void playVideo(String videoPath){
 
-	this.videoPanel.play(videoPath);
+	public void playVideo(String videoPath) {
+
+		this.videoPanel.play(videoPath);
 	}
-
 
 }
