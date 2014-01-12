@@ -65,6 +65,7 @@ public class TabelloneView extends JFrame {
 		this.setSize(500, 500);
 		this.getContentPane().setBackground(Color.black);
 		this.setVisible(true);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		initComponents();
 		this.validate();// TODO: maybe delete it
 	}

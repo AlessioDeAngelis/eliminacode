@@ -24,6 +24,8 @@ public class JPARepository {
 		EntityManager entityManager = SingletonEMF.get().createEntityManager();
 		entityManager.getTransaction().begin();
 		entityManager.persist(line);
+		String s = entityManager.getProperties().toString();
+		System.out.println("WE ARE PERSISTING " + s);
 		entityManager.getTransaction().commit();
 		entityManager.close();
 	}

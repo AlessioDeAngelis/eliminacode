@@ -343,6 +343,37 @@ public class JDBCRepository {
 		return lines;
 	}
 
+	public void printAllTables() {
+		String query = " select s.schemaname || '.' || t.tablename as tname from sys.systables t, sys.sysschemas s where t.schemaid = s.schemaid and t.tabletype = 'T' order by s.schemaname, t.tablename";
+		DataSource ds = DataSource.getInstance();
+		Connection connection = ds.getConnection();
+		PreparedStatement statement = null;
+		try {
+
+			statement = connection.prepareStatement(query);
+
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				String tName = result.getString("tname");
+				System.out.println(tName);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public List<Machine> findAllMachines() {
 		List<Machine> machines = new ArrayList<Machine>();
 		DataSource ds = DataSource.getInstance();
@@ -383,6 +414,12 @@ public class JDBCRepository {
 		DataSource ds = DataSource.getInstance();
 		Connection connection = ds.getConnection();
 		PreparedStatement statement = null;
+		// try {
+		// System.out.println(connection.getMetaData().getURL());
+		// } catch (SQLException e1) {
+		// // TODO Auto-generated catch block
+		// e1.printStackTrace();
+		// }
 		try {
 			String query = "UPDATE services SET currentNumber=? WHERE id = ? ";
 			statement = connection.prepareStatement(query);

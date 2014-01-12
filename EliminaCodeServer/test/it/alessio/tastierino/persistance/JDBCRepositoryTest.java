@@ -11,6 +11,13 @@ import org.junit.Test;
 
 public class JDBCRepositoryTest {
 	
+	
+	@Test
+	public void findAllTablesTest(){
+		JDBCRepository r = new JDBCRepository();
+		r.printAllTables();
+	}
+	
 	@Test
 	public void findAllServiceTest(){
 		JDBCRepository r = new JDBCRepository();
