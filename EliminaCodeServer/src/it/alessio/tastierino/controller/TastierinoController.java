@@ -57,12 +57,12 @@ public class TastierinoController {
 //		this.model.setCurrentMachine(machine);
 //		this.repository.findOrCreateMachine(machine);
 		Machine machine = null;
-		machine = this.repository.findMachineById(machineNumber);
+//		machine = this.repository.findMachineById(machineNumber); //REPLACED
 		if(machine == null){
 			machine = new Machine(machineNumber);
-			this.repository.persistMachine(machine);
+//			this.repository.persistMachine(machine); //REPLACED
 		}
-		
+		//TODO: caricare i dati della macchina all'inizio potrebbe essere un'idea carina
 		this.model.setCurrentMachine(machine);
 
 		// Tell the View that when ever the calculate button
@@ -129,12 +129,14 @@ public class TastierinoController {
 	 * The current machine must be active (ON), otherwise it will not increment
 	 * the value. The last number called of the service will be incremented by 1 as well
 	 */
-	public void nextNumberAction(int machineThatTriggered) {
+	public void nextNumberAction(int machineThatTriggered) throws FileNotFoundException, IOException {
 		Machine currentMachine = this.model.getCurrentMachine();
 		boolean isCurrentMachineActive = currentMachine.isActive();
 		if (isCurrentMachineActive) {
 			int serviceId = currentMachine.getServiceId();
 			String lastCalledNumberForService;
+			Properties propService = new Properties();
+			propService.load(new FileInputStream("data/prop/service"));
 			Service currentServiceOfTheMachine = this.repository.findServiceById(serviceId);
 			lastCalledNumberForService = currentServiceOfTheMachine.getCurrentNumber();
 			int nextNumberForService = 0;
