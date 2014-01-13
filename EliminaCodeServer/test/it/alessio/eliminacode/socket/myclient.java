@@ -27,7 +27,7 @@ public class myclient
 			// creazione buffer di scrittura
 			PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(client.getOutputStream())), true);
 	
-			System.out.println("Buffer ready, sending message \""+"ciao"+"\"...\n");
+			System.out.println("Buffer ready, sending message \""+args[0]+"\"...\n");
 
 			// scrittura del messaggio (passato come parametro) nel buffer in uscita
 			out.println(args[0]);

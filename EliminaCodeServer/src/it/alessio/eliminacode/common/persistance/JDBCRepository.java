@@ -24,7 +24,7 @@ public class JDBCRepository {
 		Connection connection = ds.getConnection();
 		PreparedStatement statement = null;
 		try {
-			String query = "CREATE TABLE services( id INT PRIMARY KEY, chiave INT ,name VARCHAR(32),color VARCHAR(32),currentNumber VARCHAR(12))";
+			String query = "CREATE TABLE services( id INTEGER NOT NULL, chiave INT ,name VARCHAR(32),color VARCHAR(32),currentNumber VARCHAR(12), PRIMARY KEY(id))";
 			statement = connection.prepareStatement(query);
 
 			statement.executeUpdate();
@@ -488,6 +488,32 @@ public class JDBCRepository {
 
 	private java.sql.Date util2sql(java.util.Date data) {
 		return new java.sql.Date(data.getTime());
+	}
+
+	public void createEliminacodeDB(String dbName) {
+		
+		DataSource ds = DataSource.getInstance();
+		Connection connection = ds.getConnection();
+		PreparedStatement statement = null;
+		try {
+			String query = "create database "  + dbName + "; use"+ dbName + ";";
+			statement = connection.prepareStatement(query);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 }

@@ -27,6 +27,12 @@ public class StartUpController {
 		createTables();
 		persistServices();
 	}
+	
+	private void createDB(){
+		this.repository.createEliminacodeDB("eliminacode");
+		this.repository.createEliminacodeDB("eliminacodeJPA");
+
+	}
 
 	private void createTables() {
 		this.repository.createServiceTable();
