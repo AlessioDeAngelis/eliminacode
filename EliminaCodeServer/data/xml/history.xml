@@ -24,4 +24,13 @@
     <color>ARANCIONE</color>
     <current_number>0</current_number>
   </service>
+  <line>
+    <id>0</id>
+    <service>2</service>
+    <machine>1</machine>
+    <timestamp>Mon Feb 03 23:50:13 CET 2014</timestamp>
+    <year>03</year>
+    <month>Feb</month>
+    <day>Mon</day>
+  </line>
 </services>

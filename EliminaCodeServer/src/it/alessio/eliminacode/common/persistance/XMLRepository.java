@@ -1,5 +1,6 @@
 package it.alessio.eliminacode.common.persistance;
 
+import it.alessio.eliminacode.common.model.HistoryLine;
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 
@@ -7,7 +8,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -22,10 +26,30 @@ import org.jdom2.xpath.XPathFactory;
 public class XMLRepository {
 	private String machinesFilePath;
 	private String servicesFilePath;
+	private String historyFilePath;
 
 	public XMLRepository() {
 		this.machinesFilePath = "data/xml/machines.xml";
 		this.servicesFilePath = "data/xml/services.xml";
+		this.historyFilePath = "data/xml/history.xml";
+	}
+
+	public void createXmlFile(String rootElementName, String dirPath, String fileName) {
+		// creates the dirs
+		File file = new File(dirPath);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		// creates the xml file with the given root element
+		Element rootElement = new Element(rootElementName);
+		Document doc = new Document();
+		doc.setRootElement(rootElement);
+		XMLOutputter outputter = new XMLOutputter();
+		try {
+			outputter.output(doc, new FileWriter(dirPath + fileName));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -33,9 +57,12 @@ public class XMLRepository {
 	 * */
 	public void persistMachine(Machine machine) {
 		try {
-			Element machinesElement = new Element("machines");
-			Document doc = new Document();
-			doc.setRootElement(machinesElement);
+			// Element machinesElement = new Element("machines");
+			// Document doc = new Document();
+			// doc.setRootElement(machinesElement);
+			SAXBuilder builder = new SAXBuilder();
+			File xmlFile = new File(machinesFilePath);
+			Document doc = (Document) builder.build(xmlFile);
 
 			Element machineElement = new Element("machine");
 			machineElement.addContent(new Element("id").setText("" + machine.getId()));
@@ -54,6 +81,8 @@ public class XMLRepository {
 			System.out.println("Machine Saved in " + machinesFilePath);
 		} catch (IOException io) {
 			System.out.println(io.getMessage());
+		} catch (JDOMException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -63,13 +92,13 @@ public class XMLRepository {
 	public void persistService(Service service) {
 		try {
 			Element servicesElement = new Element("services");
-//			Document doc = new Document();
+			// Document doc = new Document();
 			SAXBuilder builder = new SAXBuilder();
 			File xmlFile = new File(servicesFilePath);
 
 			Document doc = (Document) builder.build(xmlFile);
-			doc.setRootElement(servicesElement);
-
+			// doc.setRootElement(servicesElement);
+			servicesElement = doc.getRootElement();
 			Element serviceElement = new Element("service");
 			serviceElement.addContent(new Element("id").setText("" + service.getId()));
 			serviceElement.addContent(new Element("name").setText("" + service.getName()));
@@ -84,7 +113,6 @@ public class XMLRepository {
 			// display nice nice
 			xmlOutput.setFormat(Format.getPrettyFormat());
 			xmlOutput.output(doc, new FileWriter(servicesFilePath));
-			
 
 			System.out.println("Service Saved in " + servicesFilePath);
 		} catch (IOException io) {
@@ -93,14 +121,49 @@ public class XMLRepository {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Id, name, color, currentNumber will be persisted
+	 * */
+	public void persistHistoryLine(HistoryLine historyLine) {
+		try {
+
+			SAXBuilder builder = new SAXBuilder();
+			File xmlFile = new File(servicesFilePath);
+
+			Document doc = (Document) builder.build(xmlFile);
+			Element lineElement = new Element("line");
+			lineElement.addContent(new Element("id").setText("" + historyLine.getId()));
+			lineElement.addContent(new Element("service").setText("" + historyLine.getServiceId()));
+			lineElement.addContent(new Element("machine").setText("" + historyLine.getMachineId()));
+			lineElement.addContent(new Element("timestamp").setText("" + historyLine.getTimestamp()));
+			lineElement.addContent(new Element("year").setText("" + historyLine.getYear()));
+			lineElement.addContent(new Element("month").setText("" + historyLine.getMonth()));
+			lineElement.addContent(new Element("day").setText("" + historyLine.getDay()));
+
+			doc.getRootElement().addContent(lineElement);
+
+			new XMLOutputter().output(doc, System.out);
+			XMLOutputter xmlOutput = new XMLOutputter();
+
+			// display nice nice
+			xmlOutput.setFormat(Format.getPrettyFormat());
+			xmlOutput.output(doc, new FileWriter(historyFilePath));
+
+		} catch (IOException io) {
+			System.out.println(io.getMessage());
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Id, name, color, currentNumber will be persisted
 	 * */
 	public void persistServiceBackup(Service service) {
 		try {
 			Element servicesElement = new Element("services");
-//			Document doc = new Document();
+			// Document doc = new Document();
 			SAXBuilder builder = new SAXBuilder();
 			File xmlFile = new File(servicesFilePath);
 
@@ -121,7 +184,6 @@ public class XMLRepository {
 			// display nice nice
 			xmlOutput.setFormat(Format.getPrettyFormat());
 			xmlOutput.output(doc, new FileWriter(servicesFilePath));
-			
 
 			System.out.println("Service Saved in " + servicesFilePath);
 		} catch (IOException io) {
@@ -130,7 +192,6 @@ public class XMLRepository {
 			e.printStackTrace();
 		}
 	}
-
 
 	public List<Service> findAllServices() {
 		List<Service> services = new ArrayList<Service>();
@@ -170,7 +231,7 @@ public class XMLRepository {
 
 			// xmlOutput.output(doc, System.out);
 
-			System.out.println("Service updated!");
+//			System.out.println("Service updated!");
 		} catch (IOException io) {
 			io.printStackTrace();
 		} catch (JDOMException e) {
@@ -197,7 +258,7 @@ public class XMLRepository {
 			for (Element machineElement : elements) {
 				Machine machine = new Machine();
 				String id = machineElement.getChildText("id");
-				String currentNumber = machineElement.getChildText("currentNumber");
+				String currentNumber = machineElement.getChildText("current_number");
 				String currentServiceId = machineElement.getChildText("current_service");
 
 				machine.setActive(false);
@@ -249,7 +310,7 @@ public class XMLRepository {
 
 			// xmlOutput.output(doc, System.out);
 
-			System.out.println("Service updated!");
+			// System.out.println("Service updated!");
 		} catch (IOException io) {
 			io.printStackTrace();
 		} catch (JDOMException e) {
@@ -310,7 +371,7 @@ public class XMLRepository {
 			for (Element machineElement : elements) {
 				machine = new Machine();
 				String id = machineElement.getChildText("id");
-				String currentNumber = machineElement.getChildText("currentNumber");
+				String currentNumber = machineElement.getChildText("current_number");
 				String currentServiceId = machineElement.getChildText("current_service");
 
 				machine.setActive(false);
@@ -381,5 +442,91 @@ public class XMLRepository {
 			e.printStackTrace();
 		}
 		return service;
+	}
+
+	public Set<String> retrieveAllDatesFromHistoryLines() {
+		Set<String> lines = new HashSet<String>();
+		try {
+			SAXBuilder builder = new SAXBuilder();
+			File xmlFile = new File(historyFilePath);
+
+			Document doc = (Document) builder.build(xmlFile);
+			Element rootNode = doc.getRootElement();
+
+			// use xpath to find the node
+			XPathFactory xpfac = XPathFactory.instance();
+			XPathExpression xp = xpfac.compile("//history/line", Filters.element());
+			List<Element> elements = xp.evaluate(rootNode);
+			// update the node
+
+			for (Element serviceElement : elements) {
+				String timestamp = serviceElement.getChildText("timestamp");
+				lines.add(timestamp);
+			}
+
+			XMLOutputter xmlOutput = new XMLOutputter();
+
+			// display nice nice
+			xmlOutput.setFormat(Format.getPrettyFormat());
+			xmlOutput.output(doc, new FileWriter(historyFilePath));
+
+			// xmlOutput.output(doc, System.out);
+
+		} catch (IOException io) {
+			io.printStackTrace();
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		}
+		return lines;
+	}
+
+	public List<HistoryLine> retrieveHistoryLinesByDate(String day, String month, String year) {
+		List<HistoryLine> lines = new ArrayList<HistoryLine>();
+		try {
+			SAXBuilder builder = new SAXBuilder();
+			File xmlFile = new File(historyFilePath);
+
+			Document doc = (Document) builder.build(xmlFile);
+			Element rootNode = doc.getRootElement();
+
+			// use xpath to find the node
+			XPathFactory xpfac = XPathFactory.instance();
+			XPathExpression xp = xpfac.compile("//history/line[day='" + day + "'][month ='" + month + "'][year='"
+					+ year + "']", Filters.element());
+			List<Element> elements = xp.evaluate(rootNode);
+			// update the node
+
+			for (Element lineElement : elements) {
+				HistoryLine line = new HistoryLine();
+				String timestamp = lineElement.getChildText("timestamp");
+				String id = lineElement.getChildText("id");
+				String serviceId = lineElement.getChildText("service");
+				String machineId = lineElement.getChildText("machine");
+				
+				line.setId(Long.parseLong(id));
+				line.setServiceId(Integer.parseInt(serviceId));
+				line.setMachineId(Integer.parseInt(machineId));
+				line.setDay(day);
+				line.setMonth(month);
+				line.setYear(year);
+				line.setTimestamp(timestamp);
+
+				lines.add(line);
+			}
+
+			XMLOutputter xmlOutput = new XMLOutputter();
+
+			// display nice nice
+			xmlOutput.setFormat(Format.getPrettyFormat());
+			xmlOutput.output(doc, new FileWriter(historyFilePath));
+
+			// xmlOutput.output(doc, System.out);
+
+		} catch (IOException io) {
+			io.printStackTrace();
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		}
+		return lines;
 	}
 }

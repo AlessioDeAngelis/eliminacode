@@ -10,5 +10,12 @@ public class DateTest {
 		c.setTimeInMillis(System.currentTimeMillis());
 		Date date = c.getTime();
 		c.get(GregorianCalendar.MONTH);
+		System.out.println(date.toString());
+		String[] dmy = date.toString().split(" ");
+		String day = dmy[0];
+		String month = dmy[1];
+		String year = dmy[2];
+		System.out.println(day+"-"+month + "-" + year);
+
 	}
 }

@@ -28,6 +28,7 @@ public class StartUpController {
 //		this.repository = new JDBCRepository();
 		this.repo = new XMLRepository();
 		createTables();
+		createXmlFiles();
 		persistServices();
 	}
 	
@@ -36,6 +37,12 @@ public class StartUpController {
 //		this.repository.createEliminacodeDB("eliminacode");
 //		this.repository.createEliminacodeDB("eliminacodeJPA");
 
+	}
+	
+	private void createXmlFiles(){
+		this.repo.createXmlFile("services", "data/xml/", "services.xml");//TODO: not hardcode paths
+		this.repo.createXmlFile("machines", "data/xml/", "machines.xml");
+		this.repo.createXmlFile("history", "data/xml/", "history.xml");
 	}
 
 	/**

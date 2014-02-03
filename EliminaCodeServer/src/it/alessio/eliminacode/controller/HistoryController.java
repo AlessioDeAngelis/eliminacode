@@ -1,13 +1,16 @@
 package it.alessio.eliminacode.controller;
 
+import it.alessio.eliminacode.common.model.HistoryLine;
 import it.alessio.eliminacode.common.model.HistoryLineJPA;
-import it.alessio.eliminacode.common.model.ItalianMonthConverter;
-import it.alessio.eliminacode.common.persistance.JPARepository;
+import it.alessio.eliminacode.common.persistance.XMLRepository;
 import it.alessio.eliminacode.view.HistoryView;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultiset;
@@ -15,16 +18,18 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multiset;
 
 public class HistoryController {
-	private JPARepository repository;
+//	private JPARepository repository;
+	private XMLRepository repo;
 	private HistoryView view;
-	private List<HistoryLineJPA> lines;
-	private List<Date> dates;
+	private List<HistoryLine> lines;
+	private Set<String> dates;
 	private Date selectedDate;
 	private String selectedValue;
 
 	public HistoryController() {
-		this.repository = new JPARepository();
-		this.lines = new ArrayList<HistoryLineJPA>();
+//		this.repository = new JPARepository();
+		this.repo = new XMLRepository();
+		this.lines = new ArrayList<HistoryLine>();
 		this.view = new HistoryView("STATISTICHE");
 		this.selectedValue = "";
 		this.initialize();
@@ -34,17 +39,22 @@ public class HistoryController {
 	}
 
 	public void initialize() {
-		List<Date> tmp = this.repository.retrieveAllDatesFromHistoryLines();
-		this.dates = new ArrayList<Date>();
+		Set<String> tmp = this.repo.retrieveAllDatesFromHistoryLines();
+		this.dates = new HashSet<String>();
 		int limit = 0;
 		if(tmp.size()>500){
 			limit = 500;
 		}else{
 			limit = tmp.size();
 		}
-		for (int i = 0; i < limit; i++) {
-			this.dates.add(tmp.get(i));
+		
+		Iterator<String> iterator = tmp.iterator();
+		int i = 0;
+		while(iterator.hasNext() && i<limit){
+			this.dates.add(iterator.next());
+			i++;
 		}
+	
 	}
 
 	public void calculateStatistics() {
@@ -56,8 +66,7 @@ public class HistoryController {
 
 			String year = dayMonthYear[2];
 			// retrieve all the history lines of the given date
-			this.lines = this.repository.retrieveHistoryLinesByDate(Integer.parseInt(day),
-					ItalianMonthConverter.fromMonthToNumber(month), Integer.parseInt(year));
+			this.lines = this.repo.retrieveHistoryLinesByDate(day,month,year);
 
 			// a partire dalla data, voglio sapere il servizio quanto ha
 			// lavorato, un impiegato quanto ha lavorato e in quali servizi
@@ -67,7 +76,7 @@ public class HistoryController {
 			Multiset<Integer> serviceIds = HashMultiset.create();
 			ListMultimap<Integer, Integer> machine2service = ArrayListMultimap.create();
 			// take all the ids(machine and service)
-			for (HistoryLineJPA line : this.lines) {
+			for (HistoryLine line : this.lines) {
 				int machineId = line.getMachineId();
 				int serviceId = line.getServiceId();
 				serviceIds.add(serviceId);
