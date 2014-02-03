@@ -6,6 +6,7 @@ import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
 import it.alessio.eliminacode.common.persistance.JDBCRepository;
 import it.alessio.eliminacode.common.persistance.JPARepository;
+import it.alessio.eliminacode.common.persistance.XMLRepository;
 import it.alessio.eliminacode.common.sound.MusicPlayer;
 import it.alessio.tastierino.controller.listeners.NextButtonListener;
 import it.alessio.tastierino.controller.listeners.NumButtonListener;
@@ -30,7 +31,8 @@ import java.util.Properties;
 public class TastierinoController {
 	private TastierinoModel model;
 	// private TabelloneView tabelloneView;
-	private JDBCRepository repository;
+//	private JDBCRepository repository;
+	private XMLRepository repo;
 	private JPARepository jpaRepository;
 	private TastierinoView tastierinoView;
 	private Map<Integer, TastierinoView> machineId2TastierinoView;
@@ -39,7 +41,8 @@ public class TastierinoController {
 	public TastierinoController(int machineNumber) {
 		initProperties();
 		this.model = new TastierinoModel();
-		this.repository = new JDBCRepository();
+//		this.repository = new JDBCRepository();
+		this.repo = new XMLRepository();
 		this.jpaRepository = new JPARepository();
 		this.machineId2TastierinoView = new HashMap<Integer, TastierinoView>();
 //		initializeServices();
@@ -57,10 +60,10 @@ public class TastierinoController {
 //		this.model.setCurrentMachine(machine);
 //		this.repository.findOrCreateMachine(machine);
 		Machine machine = null;
-		machine = this.repository.findMachineById(machineNumber); //REPLACED REPOSITORY
+		machine = this.repo.findMachineById(machineNumber); 
 		if(machine == null){
 			machine = new Machine(machineNumber);
-			this.repository.persistMachine(machine); //REPLACED REPOSITORY
+			this.repo.persistMachine(machine); 
 		}
 		//TODO: caricare i dati della macchina all'inizio potrebbe essere un'idea carina
 		this.model.setCurrentMachine(machine);
@@ -102,7 +105,7 @@ public class TastierinoController {
 	
 	private void loadServices() {
 		//find all services
-		List<Service> services = this.repository.findAllServices();
+		List<Service> services = this.repo.findAllServices();
 		Map<Integer, Service> id2service = this.model.getId2service();
 		for(int i = 0; i<services.size(); i++){
 			id2service.put(i, services.get(i));
@@ -137,14 +140,19 @@ public class TastierinoController {
 			String lastCalledNumberForService;
 //			Properties propService = new Properties();
 //			propService.load(new FileInputStream("data/prop/service"));
-			Service currentServiceOfTheMachine = this.repository.findServiceById(serviceId);
+			Service currentServiceOfTheMachine = this.repo.findServiceById(serviceId);
 			lastCalledNumberForService = currentServiceOfTheMachine.getCurrentNumber();
 			int nextNumberForService = 0;
 			if (lastCalledNumberForService != null && !lastCalledNumberForService.equals("")) {
 				nextNumberForService = (Integer.valueOf(lastCalledNumberForService) + 1) % 99;
 			}
-			currentMachine = this.repository.updateMachine(currentMachine, nextNumberForService,serviceId);
-			Service serviceUpdated = this.repository.updateService(currentServiceOfTheMachine, ""+nextNumberForService);
+			currentMachine.setNumberYouAreServing(nextNumberForService);
+			currentMachine.setServiceId(serviceId);
+			this.repo.updateMachine(currentMachine);
+			
+			currentServiceOfTheMachine.setCurrentNumber(""+nextNumberForService);
+			Service serviceUpdated = currentServiceOfTheMachine;//TODO: to remove because now is useless
+					this.repo.updateService(currentServiceOfTheMachine);
 		
 			
 			//new history line
@@ -218,8 +226,9 @@ public class TastierinoController {
 				String newNumberToBeServed = currentMachine.getDigitsList().toString();
 				int serviceId = currentMachine.getServiceId();
 				//TODO: you can do the following only with the id without finding the service
-				Service currentService = this.repository.findServiceById(serviceId);
-				this.repository.updateService(currentService, newNumberToBeServed);
+				Service currentService = this.repo.findServiceById(serviceId);
+				currentService.setCurrentNumber(newNumberToBeServed);
+				this.repo.updateService(currentService);
 				currentMachine.getDigitsList().clearList();
 				currentMachine.setNumberYouAreServing(Integer.parseInt(newNumberToBeServed));
 				//TODO: update the machine in the db
@@ -274,7 +283,9 @@ public class TastierinoController {
 //		currentMachine.setServiceId(currentService.getId());
 //		currentMachine.setNumberYouAreServing(Integer.parseInt(currentService.getCurrentNumber()));
 		int lastNumberCalled = Integer.parseInt(currentService.getCurrentNumber());
-		currentMachine = this.repository.updateMachine(currentMachine,  lastNumberCalled, currentService.getId());
+		currentMachine.setNumberYouAreServing(lastNumberCalled);
+		currentMachine.setServiceId(currentService.getId());
+		this.repo.updateMachine(currentMachine);
 		this.model.setCurrentMachine(currentMachine);
 		// notify the view of the currentMachine
 		TastierinoView view = machineId2TastierinoView.get(currentMachine.getId());

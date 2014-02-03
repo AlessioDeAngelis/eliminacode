@@ -63,7 +63,11 @@ public class XMLRepository {
 	public void persistService(Service service) {
 		try {
 			Element servicesElement = new Element("services");
-			Document doc = new Document();
+//			Document doc = new Document();
+			SAXBuilder builder = new SAXBuilder();
+			File xmlFile = new File(servicesFilePath);
+
+			Document doc = (Document) builder.build(xmlFile);
 			doc.setRootElement(servicesElement);
 
 			Element serviceElement = new Element("service");
@@ -74,19 +78,59 @@ public class XMLRepository {
 
 			doc.getRootElement().addContent(serviceElement);
 
-			// new XMLOutputter().output(doc, System.out);
+			new XMLOutputter().output(doc, System.out);
 			XMLOutputter xmlOutput = new XMLOutputter();
 
 			// display nice nice
 			xmlOutput.setFormat(Format.getPrettyFormat());
 			xmlOutput.output(doc, new FileWriter(servicesFilePath));
+			
 
 			System.out.println("Service Saved in " + servicesFilePath);
 		} catch (IOException io) {
 			System.out.println(io.getMessage());
+		} catch (JDOMException e) {
+			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Id, name, color, currentNumber will be persisted
+	 * */
+	public void persistServiceBackup(Service service) {
+		try {
+			Element servicesElement = new Element("services");
+//			Document doc = new Document();
+			SAXBuilder builder = new SAXBuilder();
+			File xmlFile = new File(servicesFilePath);
+
+			Document doc = (Document) builder.build(xmlFile);
+			doc.setRootElement(servicesElement);
+
+			Element serviceElement = new Element("service");
+			serviceElement.addContent(new Element("id").setText("" + service.getId()));
+			serviceElement.addContent(new Element("name").setText("" + service.getName()));
+			serviceElement.addContent(new Element("color").setText("" + service.getColor()));
+			serviceElement.addContent(new Element("current_number").setText("" + service.getCurrentNumber()));
+
+			doc.getRootElement().addContent(serviceElement);
+
+			new XMLOutputter().output(doc, System.out);
+			XMLOutputter xmlOutput = new XMLOutputter();
+
+			// display nice nice
+			xmlOutput.setFormat(Format.getPrettyFormat());
+			xmlOutput.output(doc, new FileWriter(servicesFilePath));
+			
+
+			System.out.println("Service Saved in " + servicesFilePath);
+		} catch (IOException io) {
+			System.out.println(io.getMessage());
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	public List<Service> findAllServices() {
 		List<Service> services = new ArrayList<Service>();
@@ -100,8 +144,7 @@ public class XMLRepository {
 
 			// use xpath to find the node
 			XPathFactory xpfac = XPathFactory.instance();
-			XPathExpression xp = xpfac.compile("//services/service",
-					Filters.element());
+			XPathExpression xp = xpfac.compile("//services/service", Filters.element());
 			List<Element> elements = xp.evaluate(rootNode);
 			// update the node
 			for (Element serviceElement : elements) {
@@ -110,12 +153,12 @@ public class XMLRepository {
 				String name = serviceElement.getChildText("name");
 				String color = serviceElement.getChildText("color");
 				String currentNumber = serviceElement.getChildText("current_number");
-				
+
 				service.setId(Integer.parseInt(id));
 				service.setName(name);
 				service.setColor(color);
 				service.setCurrentNumber(currentNumber);
-				
+
 				services.add(service);
 			}
 
@@ -135,8 +178,8 @@ public class XMLRepository {
 		}
 		return services;
 	}
-	
-	public List<Machine> findAllMachines(){
+
+	public List<Machine> findAllMachines() {
 		List<Machine> machines = new ArrayList<Machine>();
 		try {
 
@@ -156,13 +199,13 @@ public class XMLRepository {
 				String id = machineElement.getChildText("id");
 				String currentNumber = machineElement.getChildText("currentNumber");
 				String currentServiceId = machineElement.getChildText("current_service");
-				
+
 				machine.setActive(false);
 				machine.setId(Integer.parseInt(id));
 				machine.setNumberYouAreServing(Integer.parseInt(currentNumber));
 				machine.setServiceId(Integer.parseInt(currentServiceId));
-				
-				machines.add(machine);			
+
+				machines.add(machine);
 			}
 
 			XMLOutputter xmlOutput = new XMLOutputter();
@@ -191,8 +234,7 @@ public class XMLRepository {
 
 			// use xpath to find the node
 			XPathFactory xpfac = XPathFactory.instance();
-			XPathExpression xp = xpfac.compile("//services/service[id='" + service.getId() + "']",
-					Filters.element());
+			XPathExpression xp = xpfac.compile("//services/service[id='" + service.getId() + "']", Filters.element());
 			List<Element> elements = xp.evaluate(rootNode);
 			// update the node
 			for (Element serviceElement : elements) {
@@ -248,5 +290,96 @@ public class XMLRepository {
 		} catch (JDOMException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Machine findMachineById(int machineId) {
+		Machine machine = null;
+		try {
+
+			SAXBuilder builder = new SAXBuilder();
+			File xmlFile = new File(machinesFilePath);
+
+			Document doc = (Document) builder.build(xmlFile);
+			Element rootNode = doc.getRootElement();
+
+			// use xpath to find the node
+			XPathFactory xpfac = XPathFactory.instance();
+			XPathExpression xp = xpfac.compile("//machines/machine[id='" + machineId + "']", Filters.element());
+			List<Element> elements = xp.evaluate(rootNode);
+			// update the node, in particular the current number and service
+			for (Element machineElement : elements) {
+				machine = new Machine();
+				String id = machineElement.getChildText("id");
+				String currentNumber = machineElement.getChildText("currentNumber");
+				String currentServiceId = machineElement.getChildText("current_service");
+
+				machine.setActive(false);
+				machine.setId(Integer.parseInt(id));
+				machine.setNumberYouAreServing(Integer.parseInt(currentNumber));
+				machine.setServiceId(Integer.parseInt(currentServiceId));
+				System.out.println("Machine found " + machine.toString());
+
+			}
+
+			XMLOutputter xmlOutput = new XMLOutputter();
+
+			// display nice nice
+			xmlOutput.setFormat(Format.getPrettyFormat());
+			xmlOutput.output(doc, new FileWriter(machinesFilePath));
+
+			// xmlOutput.output(doc, System.out);
+
+		} catch (IOException io) {
+			io.printStackTrace();
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		}
+		return machine;
+
+	}
+
+	public Service findServiceById(int serviceId) {
+		Service service = null;
+		try {
+
+			SAXBuilder builder = new SAXBuilder();
+			File xmlFile = new File(servicesFilePath);
+
+			Document doc = (Document) builder.build(xmlFile);
+			Element rootNode = doc.getRootElement();
+
+			// use xpath to find the node
+			XPathFactory xpfac = XPathFactory.instance();
+			XPathExpression xp = xpfac.compile("//services/service[id = '" + serviceId + "']", Filters.element());
+			List<Element> elements = xp.evaluate(rootNode);
+			// update the node
+			for (Element serviceElement : elements) {
+				service = new Service();
+				String id = serviceElement.getChildText("id");
+				String name = serviceElement.getChildText("name");
+				String color = serviceElement.getChildText("color");
+				String currentNumber = serviceElement.getChildText("current_number");
+
+				service.setId(Integer.parseInt(id));
+				service.setName(name);
+				service.setColor(color);
+				service.setCurrentNumber(currentNumber);
+				System.out.println("Service found " + service.toString());
+			}
+
+			XMLOutputter xmlOutput = new XMLOutputter();
+
+			// display nice nice
+			xmlOutput.setFormat(Format.getPrettyFormat());
+			xmlOutput.output(doc, new FileWriter(servicesFilePath));
+
+			// xmlOutput.output(doc, System.out);
+
+		} catch (IOException io) {
+			io.printStackTrace();
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		}
+		return service;
 	}
 }

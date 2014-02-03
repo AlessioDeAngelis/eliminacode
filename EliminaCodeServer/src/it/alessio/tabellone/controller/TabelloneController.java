@@ -5,6 +5,7 @@ import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
 import it.alessio.eliminacode.common.model.comparator.MachineComparator;
 import it.alessio.eliminacode.common.persistance.JDBCRepository;
+import it.alessio.eliminacode.common.persistance.XMLRepository;
 import it.alessio.eliminacode.common.sound.MusicPlayer;
 import it.alessio.tabellone.news.FeedController;
 import it.alessio.tabellone.news.FeedMessage;
@@ -29,7 +30,8 @@ import java.util.Properties;
 public class TabelloneController {
 	private TastierinoModel model;
 	private TabelloneView tabelloneView;
-	private JDBCRepository repository;
+//	private JDBCRepository repository;
+	private XMLRepository repo;
 	private Map<Integer, TastierinoView> machineId2TastierinoView;
 	private Properties properties;
 	private FeedController feedController;
@@ -37,7 +39,8 @@ public class TabelloneController {
 	public TabelloneController() {
 		loadProperties();
 		this.model = new TastierinoModel();
-		this.repository = new JDBCRepository();
+//		this.repository = new JDBCRepository();
+		this.repo = new XMLRepository();
 		String rssUrl = properties.getProperty("rss_url");
 		this.feedController = new FeedController(rssUrl);
 		loadServices();
@@ -54,7 +57,7 @@ public class TabelloneController {
 
 		int timeLeftToUpdateFeed = 4;
 		Map<Integer,Integer> service2lastNumberCalled = new HashMap<Integer,Integer>();
-		List<Service> services = repository.findAllServices();
+		List<Service> services = repo.findAllServices();
 		for(Service service : services){
 //			if(Integer.parseInt(service.getCurrentNumber())){
 			service2lastNumberCalled.put(service.getId(), Integer.parseInt(service.getCurrentNumber()));
@@ -63,7 +66,7 @@ public class TabelloneController {
 		
 		while (true) {
 			try {
-				services = repository.findAllServices();
+				services = repo.findAllServices();
 				for(Service service : services){
 					int currentNumber = Integer.parseInt(service.getCurrentNumber());
 					int prevNumber = service2lastNumberCalled.get(service.getId());
@@ -112,7 +115,7 @@ public class TabelloneController {
 
 	private void loadServices() {
 		// find all services
-		List<Service> services = this.repository.findAllServices();
+		List<Service> services = this.repo.findAllServices();
 		Map<Integer, Service> id2service = this.model.getId2service();
 		for (int i = 0; i < services.size(); i++) {
 			id2service.put(i, services.get(i));
@@ -121,7 +124,7 @@ public class TabelloneController {
 
 	// find all the machines
 	private void loadMachines() {
-		List<Machine> machines = this.repository.findAllMachines();
+		List<Machine> machines = this.repo.findAllMachines();
 		this.model.setMachines(machines);
 	}
 

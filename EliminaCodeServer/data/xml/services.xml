@@ -1,1 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<services>
+  <service>
+    <id>3</id>
+    <name>F4</name>
+    <color>ARANCIONE</color>
+    <current_number>0</current_number>
+  </service>
+</services>
