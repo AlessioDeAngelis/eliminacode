@@ -2,14 +2,9 @@ package it.alessio.eliminacode.common.model;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Represents a physical keypad
@@ -60,7 +55,7 @@ public class Machine implements Serializable{
 	public boolean isActive() {
 		return isActive;
 	}
-
+	
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
@@ -132,7 +127,7 @@ public class Machine implements Serializable{
 	public int getChiave() {
 		return chiave;
 	}
-
+	
 	public void setChiave(int key) {
 		this.chiave = key;
 	}
