@@ -4,13 +4,13 @@
     <id>0</id>
     <name>Accettazione</name>
     <color>ROSSO</color>
-    <current_number>4</current_number>
+    <current_number>10</current_number>
   </service>
   <service>
     <id>1</id>
     <name>F2</name>
     <color>BLU</color>
-    <current_number>6</current_number>
+    <current_number>12</current_number>
   </service>
   <service>
     <id>2</id>

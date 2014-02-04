@@ -119,9 +119,16 @@ public class TabelloneView extends JFrame {
 		// this.add(newsPanel, BorderLayout.SOUTH);
 
 		/**
-		 * The video Panel
+		 * The video Panel, according to the architecture		 * 
 		 * */
-		this.videoPanel = new VideoPanel(this.properties.getProperty("vlc_path"));
+		String vlcPath = "";
+		String osArch = System.getProperty("os.arch");
+		if(osArch.equals("amd64")){//64 bit
+			vlcPath = this.properties.getProperty("vlc_path_win64");
+		}else{//32 bit
+			vlcPath = this.properties.getProperty("vlc_path_win32");
+		}
+		this.videoPanel = new VideoPanel(vlcPath);
 
 	}
 

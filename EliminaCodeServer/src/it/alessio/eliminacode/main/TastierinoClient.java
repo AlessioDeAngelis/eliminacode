@@ -4,6 +4,10 @@ import it.alessio.tastierino.controller.TastierinoController;
 
 public class TastierinoClient {
 	public static void main(String[] args) {
-		TastierinoController controller = new TastierinoController(0);
+		String machineId = "0";
+		if(args.length >0){
+			machineId = args[0];
+		}		
+		TastierinoController controller = new TastierinoController(Integer.parseInt(machineId));
 	}
 }

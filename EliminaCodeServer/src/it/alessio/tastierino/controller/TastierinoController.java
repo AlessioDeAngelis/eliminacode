@@ -1,6 +1,7 @@
 package it.alessio.tastierino.controller;
 
 import it.alessio.eliminacode.common.model.HistoryLine;
+import it.alessio.eliminacode.common.model.ItalianEnglishMonthConverter;
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
@@ -160,12 +161,15 @@ public class TastierinoController {
 			gc.setTimeInMillis(System.currentTimeMillis());
 			String timestamp = gc.getTime().toString();
 			line.setTimestamp(timestamp);
-			String[] dmy = timestamp.split(" ");
-			String day = dmy[0];
-			String month = dmy[1];
-			String year = dmy[2];
+			
+			String[] dayMonthYear = timestamp.split(" ");
+			String weekDay = dayMonthYear[0];
+			String month = dayMonthYear[1];
+			String day = dayMonthYear[2];
+			String year = dayMonthYear[5];
+			String monthInItalian = ItalianEnglishMonthConverter.english2italianMonth(month, "english");
 			line.setDay(day);
-			line.setMonth(month);
+			line.setMonth(monthInItalian);
 			line.setYear(year);
 			//save the history line
 			this.repo.persistHistoryLine(line);

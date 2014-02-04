@@ -1,6 +1,7 @@
 package it.alessio.eliminacode.controller;
 
 import it.alessio.eliminacode.common.model.HistoryLine;
+import it.alessio.eliminacode.common.model.ItalianEnglishMonthConverter;
 import it.alessio.eliminacode.common.persistance.XMLRepository;
 import it.alessio.eliminacode.view.HistoryView;
 
@@ -58,10 +59,10 @@ public class HistoryController {
 		if (selectedValue != null && selectedValue != "") {
 			// parse the value to print it as a date
 			String[] dayMonthYear = selectedValue.split("-");
-			String day = dayMonthYear[0];
-			String month = dayMonthYear[1];
+			String day = dayMonthYear[1];
+			String month = dayMonthYear[2];
 
-			String year = dayMonthYear[2];
+			String year = dayMonthYear[3];
 			// retrieve all the history lines of the given date
 			this.lines = this.repo.retrieveHistoryLinesByDate(day,month,year);
 

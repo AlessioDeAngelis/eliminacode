@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <machines>
   <machine>
-    <id>0</id>
-    <current_number>6</current_number>
-    <current_service>1</current_service>
+    <id>1</id>
+    <current_number>10</current_number>
+    <current_service>0</current_service>
   </machine>
 </machines>

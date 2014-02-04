@@ -1,6 +1,7 @@
 package it.alessio.eliminacode.common.persistance;
 
 import it.alessio.eliminacode.common.model.HistoryLine;
+import it.alessio.eliminacode.common.model.ItalianEnglishMonthConverter;
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 
@@ -78,7 +79,7 @@ public class XMLRepository {
 			xmlOutput.setFormat(Format.getPrettyFormat());
 			xmlOutput.output(doc, new FileWriter(machinesFilePath));
 
-			System.out.println("Machine Saved in " + machinesFilePath);
+			// System.out.println("Machine Saved in " + machinesFilePath);
 		} catch (IOException io) {
 			System.out.println(io.getMessage());
 		} catch (JDOMException e) {
@@ -114,7 +115,7 @@ public class XMLRepository {
 			xmlOutput.setFormat(Format.getPrettyFormat());
 			xmlOutput.output(doc, new FileWriter(servicesFilePath));
 
-			System.out.println("Service Saved in " + servicesFilePath);
+			// System.out.println("Service Saved in " + servicesFilePath);
 		} catch (IOException io) {
 			System.out.println(io.getMessage());
 		} catch (JDOMException e) {
@@ -185,7 +186,7 @@ public class XMLRepository {
 			xmlOutput.setFormat(Format.getPrettyFormat());
 			xmlOutput.output(doc, new FileWriter(servicesFilePath));
 
-			System.out.println("Service Saved in " + servicesFilePath);
+			// System.out.println("Service Saved in " + servicesFilePath);
 		} catch (IOException io) {
 			System.out.println(io.getMessage());
 		} catch (JDOMException e) {
@@ -231,7 +232,7 @@ public class XMLRepository {
 
 			// xmlOutput.output(doc, System.out);
 
-//			System.out.println("Service updated!");
+			// System.out.println("Service updated!");
 		} catch (IOException io) {
 			io.printStackTrace();
 		} catch (JDOMException e) {
@@ -345,7 +346,7 @@ public class XMLRepository {
 
 			// xmlOutput.output(doc, System.out);
 
-			System.out.println("Machine updated!");
+			// System.out.println("Machine updated!");
 		} catch (IOException io) {
 			io.printStackTrace();
 		} catch (JDOMException e) {
@@ -461,7 +462,12 @@ public class XMLRepository {
 
 			for (Element serviceElement : elements) {
 				String timestamp = serviceElement.getChildText("timestamp");
-				lines.add(timestamp);
+				String[] dayMonthYear = timestamp.split(" ");
+				String weekDay = dayMonthYear[0];
+				String month = ItalianEnglishMonthConverter.english2italianMonth(dayMonthYear[1],"english");
+				String day = dayMonthYear[2];
+				String year = dayMonthYear[5];
+				lines.add(weekDay + "-" + day + "-"+ month + "-" + year);
 			}
 
 			XMLOutputter xmlOutput = new XMLOutputter();
@@ -491,7 +497,7 @@ public class XMLRepository {
 
 			// use xpath to find the node
 			XPathFactory xpfac = XPathFactory.instance();
-			XPathExpression xp = xpfac.compile("//history/line[day='" + day + "'][month ='" + month + "'][year='"
+			XPathExpression xp = xpfac.compile("//history/line[day='" + day + "' and month ='" + month + "' and year='"
 					+ year + "']", Filters.element());
 			List<Element> elements = xp.evaluate(rootNode);
 			// update the node
@@ -502,7 +508,7 @@ public class XMLRepository {
 				String id = lineElement.getChildText("id");
 				String serviceId = lineElement.getChildText("service");
 				String machineId = lineElement.getChildText("machine");
-				
+
 				line.setId(Long.parseLong(id));
 				line.setServiceId(Integer.parseInt(serviceId));
 				line.setMachineId(Integer.parseInt(machineId));

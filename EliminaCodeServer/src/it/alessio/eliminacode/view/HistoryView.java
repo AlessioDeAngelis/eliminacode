@@ -42,16 +42,15 @@ public class HistoryView extends JFrame {
 		GregorianCalendar calendar = new GregorianCalendar();
 
 		for (String date : dates) {
-			// I want to print only day-month-year, so I will remove the rest of
-			// the string
-			String[] dmy = date.split(" ");
-			String day = dmy[0];
-			String month = dmy[1];
-			String year = dmy[2];
-			
-			String monthInItalian = ItalianEnglishMonthConverter.english2italianMonth(month, "english");
-			String dayInItalian = ItalianEnglishMonthConverter.english2italianDay(day, "english");
-			String value = "" + dayInItalian + "-" + monthInItalian + "-" + year;
+			// ex of date: mon-03-nov-1989
+			String[] dayMonthYear = date.split("-");
+			String weekDay = dayMonthYear[0];
+			String day = dayMonthYear[1];
+			String month = dayMonthYear[2];
+			String year = dayMonthYear[3];
+						
+			String dayInItalian = ItalianEnglishMonthConverter.english2italianDay(weekDay, "english");
+			String value = "" + dayInItalian + "-" + day + "-"+ month + "-" + year;
 
 			model.addElement(value);
 		}
