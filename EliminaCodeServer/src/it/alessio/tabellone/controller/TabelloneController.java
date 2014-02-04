@@ -4,7 +4,6 @@ import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
 import it.alessio.eliminacode.common.model.comparator.MachineComparator;
-import it.alessio.eliminacode.common.persistance.JDBCRepository;
 import it.alessio.eliminacode.common.persistance.XMLRepository;
 import it.alessio.eliminacode.common.sound.MusicPlayer;
 import it.alessio.tabellone.news.FeedController;
@@ -30,7 +29,6 @@ import java.util.Properties;
 public class TabelloneController {
 	private TastierinoModel model;
 	private TabelloneView tabelloneView;
-//	private JDBCRepository repository;
 	private XMLRepository repo;
 	private Map<Integer, TastierinoView> machineId2TastierinoView;
 	private Properties properties;
@@ -39,7 +37,6 @@ public class TabelloneController {
 	public TabelloneController() {
 		loadProperties();
 		this.model = new TastierinoModel();
-//		this.repository = new JDBCRepository();
 		this.repo = new XMLRepository();
 		String rssUrl = properties.getProperty("rss_url");
 		this.feedController = new FeedController(rssUrl);

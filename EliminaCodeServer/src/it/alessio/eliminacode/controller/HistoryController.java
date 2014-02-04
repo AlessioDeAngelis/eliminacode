@@ -1,7 +1,6 @@
 package it.alessio.eliminacode.controller;
 
 import it.alessio.eliminacode.common.model.HistoryLine;
-import it.alessio.eliminacode.common.model.HistoryLineJPA;
 import it.alessio.eliminacode.common.persistance.XMLRepository;
 import it.alessio.eliminacode.view.HistoryView;
 
@@ -18,7 +17,6 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multiset;
 
 public class HistoryController {
-//	private JPARepository repository;
 	private XMLRepository repo;
 	private HistoryView view;
 	private List<HistoryLine> lines;
@@ -27,7 +25,6 @@ public class HistoryController {
 	private String selectedValue;
 
 	public HistoryController() {
-//		this.repository = new JPARepository();
 		this.repo = new XMLRepository();
 		this.lines = new ArrayList<HistoryLine>();
 		this.view = new HistoryView("STATISTICHE");

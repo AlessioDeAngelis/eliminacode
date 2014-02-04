@@ -129,7 +129,7 @@ public class XMLRepository {
 		try {
 
 			SAXBuilder builder = new SAXBuilder();
-			File xmlFile = new File(servicesFilePath);
+			File xmlFile = new File(historyFilePath);
 
 			Document doc = (Document) builder.build(xmlFile);
 			Element lineElement = new Element("line");

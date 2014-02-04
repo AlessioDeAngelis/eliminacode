@@ -1,36 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<services>
-  <service>
-    <id>0</id>
-    <name>Accettazione</name>
-    <color>ROSSO</color>
-    <current_number>7</current_number>
-  </service>
-  <service>
-    <id>1</id>
-    <name>F2</name>
-    <color>BLU</color>
-    <current_number>12</current_number>
-  </service>
-  <service>
-    <id>2</id>
-    <name>F3</name>
-    <color>VERDE</color>
-    <current_number>5</current_number>
-  </service>
-  <service>
-    <id>3</id>
-    <name>F4</name>
-    <color>ARANCIONE</color>
-    <current_number>0</current_number>
-  </service>
+<history>
   <line>
     <id>0</id>
-    <service>2</service>
-    <machine>1</machine>
-    <timestamp>Mon Feb 03 23:50:13 CET 2014</timestamp>
+    <service>0</service>
+    <machine>0</machine>
+    <timestamp>Mon Feb 03 23:53:14 CET 2014</timestamp>
     <year>03</year>
     <month>Feb</month>
     <day>Mon</day>
   </line>
-</services>
+  <line>
+    <id>0</id>
+    <service>0</service>
+    <machine>0</machine>
+    <timestamp>Mon Feb 03 23:53:15 CET 2014</timestamp>
+    <year>03</year>
+    <month>Feb</month>
+    <day>Mon</day>
+  </line>
+  <line>
+    <id>0</id>
+    <service>0</service>
+    <machine>0</machine>
+    <timestamp>Mon Feb 03 23:53:15 CET 2014</timestamp>
+    <year>03</year>
+    <month>Feb</month>
+    <day>Mon</day>
+  </line>
+  <line>
+    <id>0</id>
+    <service>0</service>
+    <machine>0</machine>
+    <timestamp>Mon Feb 03 23:53:15 CET 2014</timestamp>
+    <year>03</year>
+    <month>Feb</month>
+    <day>Mon</day>
+  </line>
+  <line>
+    <id>0</id>
+    <service>1</service>
+    <machine>0</machine>
+    <timestamp>Mon Feb 03 23:54:25 CET 2014</timestamp>
+    <year>03</year>
+    <month>Feb</month>
+    <day>Mon</day>
+  </line>
+  <line>
+    <id>0</id>
+    <service>1</service>
+    <machine>0</machine>
+    <timestamp>Mon Feb 03 23:54:25 CET 2014</timestamp>
+    <year>03</year>
+    <month>Feb</month>
+    <day>Mon</day>
+  </line>
+  <line>
+    <id>0</id>
+    <service>1</service>
+    <machine>0</machine>
+    <timestamp>Mon Feb 03 23:54:25 CET 2014</timestamp>
+    <year>03</year>
+    <month>Feb</month>
+    <day>Mon</day>
+  </line>
+  <line>
+    <id>0</id>
+    <service>1</service>
+    <machine>0</machine>
+    <timestamp>Mon Feb 03 23:54:25 CET 2014</timestamp>
+    <year>03</year>
+    <month>Feb</month>
+    <day>Mon</day>
+  </line>
+  <line>
+    <id>0</id>
+    <service>1</service>
+    <machine>0</machine>
+    <timestamp>Mon Feb 03 23:54:25 CET 2014</timestamp>
+    <year>03</year>
+    <month>Feb</month>
+    <day>Mon</day>
+  </line>
+  <line>
+    <id>0</id>
+    <service>1</service>
+    <machine>0</machine>
+    <timestamp>Mon Feb 03 23:54:26 CET 2014</timestamp>
+    <year>03</year>
+    <month>Feb</month>
+    <day>Mon</day>
+  </line>
+</history>

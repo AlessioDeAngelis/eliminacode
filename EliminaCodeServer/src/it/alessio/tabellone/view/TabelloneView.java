@@ -3,7 +3,6 @@ package it.alessio.tabellone.view;
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
-import it.alessio.eliminacode.common.persistance.JDBCRepository;
 import it.alessio.eliminacode.common.util.ColorFactory;
 import it.alessio.tabellone.news.FeedMessage;
 import it.alessio.tabellone.view.panels.ImagePanel;
@@ -16,6 +15,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -65,7 +65,7 @@ public class TabelloneView extends JFrame {
 		this.setSize(500, 500);
 		this.getContentPane().setBackground(Color.black);
 		this.setVisible(true);
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		this.setExtendedState(Frame.MAXIMIZED_BOTH); 
 		initComponents();
 		this.validate();// TODO: maybe delete it
 	}
@@ -164,7 +164,6 @@ public class TabelloneView extends JFrame {
 	public void updateViewText(List<Service> services) {
 		// update each servicePanel
 		Set<Integer> serviceIds = this.model.getId2service().keySet();
-		JDBCRepository r = new JDBCRepository();
 		for (Service service : services) {
 			ServicePanel servicePanel = this.serviceId2ServicePanel.get(service.getId());
 			servicePanel.updateLastNumberTextField(service.getCurrentNumber());
