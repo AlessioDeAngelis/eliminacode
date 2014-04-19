@@ -9,7 +9,6 @@ public class FeedController {
 	public FeedController(String rssUrl) {
 		this.feedCounter = 0;
 		this.rssUrl = rssUrl;
-		initializeFeed();
 	}
 
 	public void initializeFeed() {

@@ -237,8 +237,8 @@ public class TastierinoController {
 				this.repo.updateService(currentService);
 				currentMachine.getDigitsList().clearList();
 				currentMachine.setNumberYouAreServing(Integer.parseInt(newNumberToBeServed));
-				//TODO: update the machine in the db
-				// this.tabelloneView.updateViewText();
+				// update the machine in the db
+				this.repo.updateMachine(currentMachine);
 
 				// only the current machine view wants to be notified
 				TastierinoView view = machineId2TastierinoView.get(currentMachine.getId());

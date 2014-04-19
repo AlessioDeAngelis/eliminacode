@@ -33,13 +33,19 @@ public class TabelloneController {
 	private Map<Integer, TastierinoView> machineId2TastierinoView;
 	private Properties properties;
 	private FeedController feedController;
+	private boolean isInternetAvailable = true;
 
 	public TabelloneController() {
 		loadProperties();
 		this.model = new TastierinoModel();
 		this.repo = new XMLRepository();
 		String rssUrl = properties.getProperty("rss_url");
-		this.feedController = new FeedController(rssUrl);
+		try {
+			this.feedController = new FeedController(rssUrl);
+			this.feedController.initializeFeed();
+		} catch (Exception e) {
+			isInternetAvailable = false;
+		}
 		loadServices();
 		groupService2machines();
 		this.tabelloneView = new TabelloneView(model, properties);
@@ -53,27 +59,32 @@ public class TabelloneController {
 		this.tabelloneView.playVideo(properties.getProperty("video_path"));
 
 		int timeLeftToUpdateFeed = 4;
-		Map<Integer,Integer> service2lastNumberCalled = new HashMap<Integer,Integer>();
+		Map<Integer, Integer> service2lastNumberCalled = new HashMap<Integer, Integer>();
 		List<Service> services = repo.findAllServices();
-		for(Service service : services){
-//			if(Integer.parseInt(service.getCurrentNumber())){
+		for (Service service : services) {
+			// if(Integer.parseInt(service.getCurrentNumber())){
 			service2lastNumberCalled.put(service.getId(), Integer.parseInt(service.getCurrentNumber()));
-//			}
+			// }
 		}
-		
+
 		while (true) {
 			try {
 				services = repo.findAllServices();
-				for(Service service : services){
+				for (Service service : services) {
 					int currentNumber = Integer.parseInt(service.getCurrentNumber());
 					int prevNumber = service2lastNumberCalled.get(service.getId());
-					if(currentNumber != prevNumber){
-						//play sound once
+					if (currentNumber != prevNumber) {
+						// play sound once
 						MusicPlayer.playSound("data/sounds/coin.wav");
 						break;
 					}
 				}
-				FeedMessage feedMessage = this.feedController.giveNextMessage();
+				FeedMessage feedMessage = new FeedMessage();
+				if (isInternetAvailable) {
+					feedMessage = this.feedController.giveNextMessage();
+				} else { // no internet connection
+					feedMessage.setTitle("NESSUNA CONNESSIONE INTERNET DISPONIBILE");
+				}
 				groupService2machines();
 				this.tabelloneView.updateViewOrder(services);
 				this.tabelloneView.updateViewText(services);
@@ -84,8 +95,8 @@ public class TabelloneController {
 				} else {
 					timeLeftToUpdateFeed--;
 				}
-				//Update last number for service
-				for(Service service : services){
+				// Update last number for service
+				for (Service service : services) {
 					service2lastNumberCalled.put(service.getId(), Integer.parseInt(service.getCurrentNumber()));
 				}
 				Thread.sleep(1000);
