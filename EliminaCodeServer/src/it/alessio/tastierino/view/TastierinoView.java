@@ -4,6 +4,7 @@ import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
 import it.alessio.eliminacode.common.util.ColorFactory;
+import it.alessio.tastierino.controller.TastierinoController;
 import it.alessio.tastierino.controller.listeners.NumButtonListener;
 import it.alessio.tastierino.controller.listeners.OnOffButtonListener;
 import it.alessio.tastierino.controller.listeners.ServiceButtonListener;
@@ -15,6 +16,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -86,16 +89,19 @@ public class TastierinoView extends JFrame {
 	 * The model. The view will render the model values to the screen
 	 * */
 	private TastierinoModel model;
+	
+	private TastierinoController controller;
 
 	private int id;
 
-	public TastierinoView(String title, TastierinoModel model, int id) {
+	public TastierinoView(String title, TastierinoModel model, int id, TastierinoController controller) {
 		super(title);
 		this.model = model;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(500, 500);
 		this.setVisible(true);
 		this.id = id;
+		this.controller = controller;
 		initComponents();
 	}
 
@@ -200,6 +206,13 @@ public class TastierinoView extends JFrame {
 		}
 		this.rightPanel.setVisible(true);
 		this.add(rightPanel, BorderLayout.EAST);// add the panel to the frame
+		
+		//when you are closing the "tastierino" client, you should notify the controller
+		this.addWindowListener(new WindowAdapter() {
+			  public void windowClosing(WindowEvent e) {
+				  controller.closeCurrentMachineAction();
+			  }
+			});
 	}
 
 	/**

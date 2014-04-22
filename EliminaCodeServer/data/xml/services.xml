@@ -4,23 +4,23 @@
     <id>0</id>
     <name>Accettazione</name>
     <color>ROSSO</color>
-    <current_number>10</current_number>
+    <current_number>5</current_number>
   </service>
   <service>
     <id>1</id>
-    <name>F2</name>
+    <name>Prelievi</name>
     <color>BLU</color>
-    <current_number>12</current_number>
+    <current_number>0</current_number>
   </service>
   <service>
     <id>2</id>
-    <name>F3</name>
+    <name>Donazioni</name>
     <color>VERDE</color>
     <current_number>0</current_number>
   </service>
   <service>
     <id>3</id>
-    <name>F4</name>
+    <name>Prestiti</name>
     <color>ARANCIONE</color>
     <current_number>0</current_number>
   </service>

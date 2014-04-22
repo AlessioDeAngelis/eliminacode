@@ -48,19 +48,19 @@ public class ServicePanel extends JPanel {
 //		this.add(topPanel);
 		this.serviceNameTextField = new JTextField();
 		this.serviceNameTextField.setEditable(false);
-//		this.serviceNameTextField.setPreferredSize(new Dimension(50, 30));
-		this.serviceNameTextField.setFont(new Font("SansSerif", Font.BOLD, 38));
+//		this.serviceNameTextField.setPreferredSize(new Dimension(50, 300));
+		this.serviceNameTextField.setFont(new Font("SansSerif", Font.BOLD, 36));
 		this.serviceNameTextField.setHorizontalAlignment(JTextField.CENTER);
-//		this.serviceNameTextField.setBackground(Color.BLACK);
-		this.serviceNameTextField.setBackground(Color.LIGHT_GRAY);
+		this.serviceNameTextField.setBackground(Color.BLACK);
+//		this.serviceNameTextField.setBackground(Color.LIGHT_GRAY);
 		this.serviceNameTextField.setForeground(this.textColor);
-		this.serviceNameTextField.setText(service.getName()+"     " + service.getCurrentNumber() );
+		this.serviceNameTextField.setText(service.getName().toUpperCase()+"     " + service.getCurrentNumber() );
 //		topPanel.add(serviceNameTextField,BorderLayout.WEST);
 		this.add(serviceNameTextField);
 		
 		this.serviceLastNumberTextField = new JTextField();
 		this.serviceLastNumberTextField.setEditable(false);
-		this.serviceLastNumberTextField.setPreferredSize(new Dimension(50, 30));
+		this.serviceLastNumberTextField.setPreferredSize(new Dimension(50, 50));
 		this.serviceLastNumberTextField.setFont(new Font("SansSerif", Font.BOLD, 36));
 		this.serviceLastNumberTextField.setHorizontalAlignment(JTextField.CENTER);
 		this.serviceLastNumberTextField.setBackground(Color.LIGHT_GRAY);
@@ -70,16 +70,16 @@ public class ServicePanel extends JPanel {
 
 		this.descriptionTextField = new JTextField();
 		this.descriptionTextField.setEditable(false);
-		this.descriptionTextField.setPreferredSize(new Dimension(50, 30));
+		this.descriptionTextField.setPreferredSize(new Dimension(50, 50));
 		this.descriptionTextField.setFont(new Font("SansSerif", Font.BOLD, 22));
 		this.descriptionTextField.setHorizontalAlignment(JTextField.LEFT);
 		this.descriptionTextField.setBackground(Color.LIGHT_GRAY);
-		this.descriptionTextField.setForeground(Color.white);
-		this.descriptionTextField.setText("        NUMERO CHIAMATO                  " + "SPORTELLO");
+		this.descriptionTextField.setForeground(Color.BLACK);
+		this.descriptionTextField.setText("        NUMERO CHIAMATO                        " + "SPORTELLO");
 		this.add(descriptionTextField);
 	}
 	
 	public void updateLastNumberTextField(String number){
-		this.serviceNameTextField.setText(service.getName()+"     " + number );
+		this.serviceNameTextField.setText(service.getName().toUpperCase()+"     " + number );
 	}
 }

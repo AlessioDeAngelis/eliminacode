@@ -1,7 +1,7 @@
 package it.alessio.eliminacode.controller;
 
+import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
-
 import it.alessio.eliminacode.common.persistance.XMLRepository;
 
 import java.io.FileInputStream;
@@ -13,7 +13,7 @@ import java.util.Properties;
  * Saves the model (services and machines) in the db, in order to let the other components to have data to start from
  * */
 public class StartUpController {
-	private XMLRepository repo;
+	private XMLRepository xmlRepository;
 	private Properties properties;
 
 	public StartUpController() {
@@ -22,16 +22,18 @@ public class StartUpController {
 	
 	public void initialize(){
 		loadProperties();
-		this.repo = new XMLRepository();
+		this.xmlRepository = new XMLRepository();
 		createXmlFiles();
-		persistServices();
+		insertServices();
+		insertMachines();
 	}
 	
 	
 	private void createXmlFiles(){
-		this.repo.createXmlFile("services", "data/xml/", "services.xml");//TODO: not hardcode paths
-		this.repo.createXmlFile("machines", "data/xml/", "machines.xml");
-		this.repo.createXmlFile("history", "data/xml/", "history.xml");
+		String dbFolderPath = this.properties.getProperty("db_folder_path");
+		this.xmlRepository.createXmlFile("services", dbFolderPath, "services.xml");//TODO: not hardcode paths
+		this.xmlRepository.createXmlFile("machines", dbFolderPath, "machines.xml");
+		this.xmlRepository.createXmlFile("history", dbFolderPath, "history.xml");
 	}
 
 	private void loadProperties() {
@@ -47,7 +49,7 @@ public class StartUpController {
 
 	}
 
-	private void persistServices() {
+	private void insertServices() {
 		String numServiceString = properties.getProperty("numero_servizi");
 		int numServices = 4;
 		if (numServiceString != null && !numServiceString.equals("")) {
@@ -56,12 +58,33 @@ public class StartUpController {
 		for (int i = 0; i < numServices; i++) {
 			Service service = new Service(i, properties.getProperty("nome_servizio" + (i + 1)), "0",
 					properties.getProperty("colore_servizio" + (i + 1)));
-			Service returnedService = this.repo.findServiceById(service.getId());
+			Service returnedService = this.xmlRepository.findServiceById(service.getId());
 			if(returnedService == null){
-				this.repo.persistService(service);
+				this.xmlRepository.persistService(service);
 //				System.out.println(service + " STORED SUCCESSFULLY");
 			}
 			
+		}
+	}
+	
+	/**
+	 * Inserts new machines in the database
+	 * */
+	private void insertMachines(){
+		String numberOfMachinesString  = properties.getProperty("numero_tastierini");
+		int numMachines = 4;
+		if (numberOfMachinesString != null && !numberOfMachinesString.equals("")) {
+			numMachines = Integer.parseInt(numberOfMachinesString);
+		}
+		
+		for(int i = 0; i < numMachines; i++){
+			Machine machine = new Machine();
+			machine.setChiave(i);
+			machine.setId(i);
+			machine.setNumberYouAreServing(0);
+			machine.setServiceId(0);
+			System.out.println("Inserting " + machine);
+			this.xmlRepository.persistMachine(machine);
 		}
 	}
 

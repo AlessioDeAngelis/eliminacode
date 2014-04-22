@@ -30,7 +30,7 @@ public class TastierinoController {
 	private TastierinoModel model;
 	// private TabelloneView tabelloneView;
 //	private JDBCRepository repository;
-	private XMLRepository repo;
+	private XMLRepository xmlRepository;
 //	private JPARepository jpaRepository;
 	private TastierinoView tastierinoView;
 	private Map<Integer, TastierinoView> machineId2TastierinoView;
@@ -40,7 +40,7 @@ public class TastierinoController {
 		initProperties();
 		this.model = new TastierinoModel();
 //		this.repository = new JDBCRepository();
-		this.repo = new XMLRepository();
+		this.xmlRepository = new XMLRepository();
 //		this.jpaRepository = new JPARepository();
 		this.machineId2TastierinoView = new HashMap<Integer, TastierinoView>();
 //		initializeServices();
@@ -58,10 +58,10 @@ public class TastierinoController {
 //		this.model.setCurrentMachine(machine);
 //		this.repository.findOrCreateMachine(machine);
 		Machine machine = null;
-		machine = this.repo.findMachineById(machineNumber); 
+		machine = this.xmlRepository.findMachineById(machineNumber); 
 		if(machine == null){
 			machine = new Machine(machineNumber);
-			this.repo.persistMachine(machine); 
+			this.xmlRepository.persistMachine(machine); 
 		}
 		//TODO: caricare i dati della macchina all'inizio potrebbe essere un'idea carina
 		this.model.setCurrentMachine(machine);
@@ -69,7 +69,7 @@ public class TastierinoController {
 		// Tell the View that when ever the calculate button
 		// is clicked to execute the actionPerformed method
 		// in the CalculateListener inner class
-		TastierinoView view = new TastierinoView("OPERATORE " + (machine.getId() + 1), model, machine.getId());
+		TastierinoView view = new TastierinoView("OPERATORE " + (machine.getId() + 1), model, machine.getId(),this);
 		view.addNumberButtonsListener(new NumberButtonListener(this));
 		view.addNextButtonListener(new NextButtonListener(this));
 		view.addOnOffButtonListener(new OnOffButtonListener(this));
@@ -103,7 +103,7 @@ public class TastierinoController {
 	
 	private void loadServices() {
 		//find all services
-		List<Service> services = this.repo.findAllServices();
+		List<Service> services = this.xmlRepository.findAllServices();
 		Map<Integer, Service> id2service = this.model.getId2service();
 		for(int i = 0; i<services.size(); i++){
 			id2service.put(i, services.get(i));
@@ -138,7 +138,7 @@ public class TastierinoController {
 			String lastCalledNumberForService;
 //			Properties propService = new Properties();
 //			propService.load(new FileInputStream("data/prop/service"));
-			Service currentServiceOfTheMachine = this.repo.findServiceById(serviceId);
+			Service currentServiceOfTheMachine = this.xmlRepository.findServiceById(serviceId);
 			lastCalledNumberForService = currentServiceOfTheMachine.getCurrentNumber();
 			int nextNumberForService = 0;
 			if (lastCalledNumberForService != null && !lastCalledNumberForService.equals("")) {
@@ -146,11 +146,11 @@ public class TastierinoController {
 			}
 			currentMachine.setNumberYouAreServing(nextNumberForService);
 			currentMachine.setServiceId(serviceId);
-			this.repo.updateMachine(currentMachine);
+			this.xmlRepository.updateMachine(currentMachine);
 			
 			currentServiceOfTheMachine.setCurrentNumber(""+nextNumberForService);
 			Service serviceUpdated = currentServiceOfTheMachine;//TODO: to remove because now is useless
-					this.repo.updateService(currentServiceOfTheMachine);
+					this.xmlRepository.updateService(currentServiceOfTheMachine);
 		
 			
 			//new history line
@@ -172,7 +172,7 @@ public class TastierinoController {
 			line.setMonth(monthInItalian);
 			line.setYear(year);
 			//save the history line
-			this.repo.persistHistoryLine(line);
+			this.xmlRepository.persistHistoryLine(line);
 			
 			//update the model according to the last changes
 			this.model.getId2service().put(serviceUpdated.getId(), serviceUpdated);
@@ -232,13 +232,13 @@ public class TastierinoController {
 				String newNumberToBeServed = currentMachine.getDigitsList().toString();
 				int serviceId = currentMachine.getServiceId();
 				//TODO: you can do the following only with the id without finding the service
-				Service currentService = this.repo.findServiceById(serviceId);
+				Service currentService = this.xmlRepository.findServiceById(serviceId);
 				currentService.setCurrentNumber(newNumberToBeServed);
-				this.repo.updateService(currentService);
+				this.xmlRepository.updateService(currentService);
 				currentMachine.getDigitsList().clearList();
 				currentMachine.setNumberYouAreServing(Integer.parseInt(newNumberToBeServed));
 				// update the machine in the db
-				this.repo.updateMachine(currentMachine);
+				this.xmlRepository.updateMachine(currentMachine);
 
 				// only the current machine view wants to be notified
 				TastierinoView view = machineId2TastierinoView.get(currentMachine.getId());
@@ -261,10 +261,20 @@ public class TastierinoController {
 		Machine currentMachine = this.model.getCurrentMachine();
 		boolean isActive = currentMachine.isActive();
 		currentMachine.setActive(!isActive);
+		this.xmlRepository.updateMachine(currentMachine);
 		// notify the view of the current machine
 		TastierinoView view = machineId2TastierinoView.get(currentMachine.getId());
-//		view.changeDisplayText(currentMachine.getServiceId().getCurrentNumber()); //TODO: maybe it's correct
 		view.changeDisplayText(""+currentMachine.getNumberYouAreServing());
+	}
+	
+	public void closeCurrentMachineAction() {
+		/*
+		 * Close the machine and set it inactive
+		 */
+		
+		Machine currentMachine = this.model.getCurrentMachine();
+		currentMachine.setActive(false);
+		this.xmlRepository.updateMachine(currentMachine);	
 	}
 
 	/**
@@ -291,7 +301,7 @@ public class TastierinoController {
 		int lastNumberCalled = Integer.parseInt(currentService.getCurrentNumber());
 		currentMachine.setNumberYouAreServing(lastNumberCalled);
 		currentMachine.setServiceId(currentService.getId());
-		this.repo.updateMachine(currentMachine);
+		this.xmlRepository.updateMachine(currentMachine);
 		this.model.setCurrentMachine(currentMachine);
 		// notify the view of the currentMachine
 		TastierinoView view = machineId2TastierinoView.get(currentMachine.getId());

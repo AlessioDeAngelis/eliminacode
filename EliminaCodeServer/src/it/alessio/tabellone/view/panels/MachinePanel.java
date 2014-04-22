@@ -83,4 +83,8 @@ public class MachinePanel extends JPanel {
 	public void setMachine(Machine machine){
 		this.machine = machine;
 	}
+	
+	public void updateFontSize(int newSize){
+		
+	}
 }

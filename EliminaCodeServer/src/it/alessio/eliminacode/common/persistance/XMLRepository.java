@@ -54,7 +54,7 @@ public class XMLRepository {
 	}
 
 	/**
-	 * I will persist only the id, the currentNumber and the current service
+	 * I will persist only the id, the currentNumber and the current service, if it active
 	 * */
 	public void persistMachine(Machine machine) {
 		try {
@@ -69,6 +69,7 @@ public class XMLRepository {
 			machineElement.addContent(new Element("id").setText("" + machine.getId()));
 			machineElement.addContent(new Element("current_number").setText("" + machine.getNumberYouAreServing()));
 			machineElement.addContent(new Element("current_service").setText("" + machine.getServiceId()));
+			machineElement.addContent(new Element("is_active").setText("" + machine.isActive()));
 
 			doc.getRootElement().addContent(machineElement);
 
@@ -261,8 +262,13 @@ public class XMLRepository {
 				String id = machineElement.getChildText("id");
 				String currentNumber = machineElement.getChildText("current_number");
 				String currentServiceId = machineElement.getChildText("current_service");
+				String activeString = machineElement.getChildText("is_active");
+				boolean isActive = false;
+				if(activeString!=null && activeString.equals("true")){
+					isActive = true;
+				}
 
-				machine.setActive(false);
+				machine.setActive(isActive);
 				machine.setId(Integer.parseInt(id));
 				machine.setNumberYouAreServing(Integer.parseInt(currentNumber));
 				machine.setServiceId(Integer.parseInt(currentServiceId));
@@ -336,6 +342,8 @@ public class XMLRepository {
 			for (Element machineElement : elements) {
 				machineElement.getChild("current_number").setText("" + machine.getNumberYouAreServing());
 				machineElement.getChild("current_service").setText("" + machine.getServiceId());
+				machineElement.getChild("is_active").setText("" + machine.isActive());
+
 			}
 
 			XMLOutputter xmlOutput = new XMLOutputter();

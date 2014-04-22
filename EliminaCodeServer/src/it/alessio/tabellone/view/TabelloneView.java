@@ -65,7 +65,7 @@ public class TabelloneView extends JFrame {
 		this.setSize(500, 500);
 		this.getContentPane().setBackground(Color.black);
 		this.setVisible(true);
-		this.setExtendedState(Frame.MAXIMIZED_BOTH); 
+		this.setExtendedState(Frame.MAXIMIZED_BOTH);
 		initComponents();
 		this.validate();// TODO: maybe delete it
 	}
@@ -101,7 +101,7 @@ public class TabelloneView extends JFrame {
 		 * The left panel
 		 * */
 		this.leftPanel = new JPanel();
-		this.leftPanel.setBackground(Color.black);
+		this.leftPanel.setBackground(Color.DARK_GRAY);
 		this.leftPanel.setLayout(new GridLayout(10, 1));
 		updateViewOrder(services);
 
@@ -119,13 +119,13 @@ public class TabelloneView extends JFrame {
 		// this.add(newsPanel, BorderLayout.SOUTH);
 
 		/**
-		 * The video Panel, according to the architecture		 * 
+		 * The video Panel, according to the architecture *
 		 * */
 		String vlcPath = "";
 		String osArch = System.getProperty("os.arch");
-		if(osArch.equals("amd64")){//64 bit
+		if (osArch.equals("amd64")) {// 64 bit
 			vlcPath = this.properties.getProperty("vlc_path_win64");
-		}else{//32 bit
+		} else {// 32 bit
 			vlcPath = this.properties.getProperty("vlc_path_win32");
 		}
 		this.videoPanel = new VideoPanel(vlcPath);
@@ -151,13 +151,15 @@ public class TabelloneView extends JFrame {
 				for (Machine machine : machines) {
 					// insert the various machine panels corresponding to the
 					// service after the service panel
-					int machineId = machine.getId();
-					MachinePanel machinePanel = this.machineId2MachinePanel.get(machineId);
-					machinePanel.setMachine(machine);
-					String colorString = this.model.getId2service().get(serviceId).getColor();
-					Color color = ColorFactory.getColor(colorString);
-					machinePanel.updateNumberColor(color);
-					this.leftPanel.add(machinePanel);
+					if (machine.isActive()) { //show the machine only if it's active
+						int machineId = machine.getId();
+						MachinePanel machinePanel = this.machineId2MachinePanel.get(machineId);
+						machinePanel.setMachine(machine);
+						String colorString = this.model.getId2service().get(serviceId).getColor();
+						Color color = ColorFactory.getColor(colorString);
+						machinePanel.updateNumberColor(color);
+						this.leftPanel.add(machinePanel);
+					}
 				}
 			}
 		}

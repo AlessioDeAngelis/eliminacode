@@ -1,8 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <machines>
   <machine>
-    <id>1</id>
-    <current_number>10</current_number>
+    <id>0</id>
+    <current_number>0</current_number>
     <current_service>0</current_service>
+    <is_active>false</is_active>
+  </machine>
+  <machine>
+    <id>1</id>
+    <current_number>0</current_number>
+    <current_service>2</current_service>
+    <is_active>false</is_active>
+  </machine>
+  <machine>
+    <id>2</id>
+    <current_number>0</current_number>
+    <current_service>0</current_service>
+    <is_active>false</is_active>
+  </machine>
+  <machine>
+    <id>3</id>
+    <current_number>0</current_number>
+    <current_service>0</current_service>
+    <is_active>false</is_active>
+  </machine>
+  <machine>
+    <id>4</id>
+    <current_number>0</current_number>
+    <current_service>0</current_service>
+    <is_active>false</is_active>
   </machine>
 </machines>
