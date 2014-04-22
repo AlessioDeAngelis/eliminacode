@@ -4,6 +4,7 @@ import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
 import it.alessio.eliminacode.common.util.ColorFactory;
+import it.alessio.tabellone.controller.TabelloneController;
 import it.alessio.tabellone.news.FeedMessage;
 import it.alessio.tabellone.view.panels.ImagePanel;
 import it.alessio.tabellone.view.panels.MachinePanel;
@@ -19,6 +20,8 @@ import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +33,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import net.miginfocom.swing.MigLayout;
 
 /* This is the View
  Its only job is to display what the user sees
@@ -55,11 +60,13 @@ public class TabelloneView extends JFrame {
 	private JPanel upperPanel;
 	private Map<Integer, List<MachinePanel>> serviceId2MachinePanel;
 	private Properties properties;
+	private TabelloneController controller;
 
-	public TabelloneView(TastierinoModel model, Properties properties) {
+	public TabelloneView(TastierinoModel model, Properties properties, TabelloneController controller) {
 		super(properties.getProperty("nome_azienda", "Tabellone"));
 		this.properties = properties;
 		this.model = model;
+		this.controller = controller;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(500, 500);
 		this.getContentPane().setBackground(Color.black);
@@ -70,8 +77,8 @@ public class TabelloneView extends JFrame {
 	}
 
 	private void initComponents() {
-		// this.setLayout(new GridBagLayout());
-
+//		 this.setLayout(new GridBagLayout());
+		
 		this.upperPanel = new JPanel();
 		upperPanel.setLayout(new GridLayout(2, 1));
 		// this.add(upperPanel,BorderLayout.NORTH);
@@ -100,7 +107,8 @@ public class TabelloneView extends JFrame {
 		 * */
 		this.leftPanel = new JPanel();
 		this.leftPanel.setBackground(Color.DARK_GRAY);
-		this.leftPanel.setLayout(new GridLayout(10, 1));
+//		this.leftPanel.setLayout(new GridLayout(15, 1));
+		this.leftPanel.setLayout(new MigLayout("fill"));
 		updateViewOrder(services);		
 
 		/*
@@ -126,8 +134,7 @@ public class TabelloneView extends JFrame {
 		} else {// 32 bit
 			vlcPath = this.properties.getProperty("vlc_path_win32");
 		}
-		this.videoPanel = new VideoPanel(vlcPath);
-
+		this.videoPanel = new VideoPanel(vlcPath);	
 	}
 
 	/**
@@ -136,19 +143,20 @@ public class TabelloneView extends JFrame {
 	public void updateViewOrder(List<Service> allServices) {
 		//check how many machines are active, in order to resize the text
 		int numberOfActiveMachines = this.model.getActiveMachines().size();
-		int fontSize = 70;
+		int fontSize = 50;
 		if(numberOfActiveMachines > 5 && numberOfActiveMachines < 10){
-			fontSize = 50;
+			fontSize = 40;
 		}if(numberOfActiveMachines >=10 ){
-			fontSize = 30;
+			fontSize = 20;
 		}
+	
 		
 		Map<Integer, List<Machine>> service2machines = this.model.getService2machines();
 		for (Service service : allServices) {
 			int serviceId = service.getId();
 			// insert the service panel to the frame
 			ServicePanel servicePanel = this.serviceId2ServicePanel.get(serviceId);
-			this.leftPanel.add(servicePanel);
+			this.leftPanel.add(servicePanel, "wrap, height 50:70:120, growx");
 			List<Machine> machines = service2machines.get(serviceId);
 			if (machines != null && machines.size() > 0) {
 				for (Machine machine : machines) {
@@ -162,7 +170,7 @@ public class TabelloneView extends JFrame {
 					Color color = ColorFactory.getColor(colorString);
 					machinePanel.updateNumberColor(color);
 					if (machine.isActive()) {
-						this.leftPanel.add(machinePanel);
+						this.leftPanel.add(machinePanel, "wrap, height 10:30:50, grow");
 					} else {
 						this.leftPanel.remove(machinePanel);
 					}
@@ -172,6 +180,7 @@ public class TabelloneView extends JFrame {
 		// this.upperPanel.add(leftPanel, BorderLayout.WEST);// add the left
 		// panel to the frame
 		this.add(leftPanel, BorderLayout.WEST);
+//		this.add(leftPanel,"left, growx");
 		this.leftPanel.validate();// for rendering the new layout
 		this.validate();
 	}

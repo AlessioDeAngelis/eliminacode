@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import net.miginfocom.swing.MigLayout;
+
 public class MachinePanel extends JPanel {
 	private TastierinoModel model;
 	private  Machine machine;
@@ -43,7 +45,8 @@ public class MachinePanel extends JPanel {
 
 	private void initComponents() {
 		this.setLayout(new GridLayout(1,2));
-				
+//				this.setLayout(new MigLayout(
+//						));
 		this.currentNumberTextField = new JTextField();
 //		this.currentNumberTextField.setPreferredSize(new Dimension(50, 30));
 		this.currentNumberTextField.setFont(new Font("SansSerif", Font.BOLD, 70));

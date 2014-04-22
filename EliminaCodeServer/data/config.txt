@@ -1,6 +1,6 @@
 nome_azienda=Azienda Mia
 numero_servizi=4
-numero_tastierini=10
+numero_tastierini=5
 colore_servizio1=ROSSO
 colore_servizio2=BLU
 colore_servizio3=VERDE

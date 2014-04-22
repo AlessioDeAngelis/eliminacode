@@ -58,11 +58,11 @@
 			<version>1.1.6</version>
 		</dependency>
 		<dependency>
-	<groupId>com.miglayout</groupId>
-	<artifactId>miglayout</artifactId>
-	<version>4.2</version>
-</dependency>
-            
+			<groupId>com.miglayout</groupId>
+			<artifactId>miglayout-swing</artifactId>
+			<version>4.2</version>
+		</dependency>
+
 
 
 	</dependencies>

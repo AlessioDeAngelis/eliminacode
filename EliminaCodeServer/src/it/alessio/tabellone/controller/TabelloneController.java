@@ -29,7 +29,7 @@ import java.util.Properties;
 public class TabelloneController {
 	private TastierinoModel model;
 	private TabelloneView tabelloneView;
-	private XMLRepository repo;
+	private XMLRepository xmlRepository;
 	private Map<Integer, TastierinoView> machineId2TastierinoView;
 	private Properties properties;
 	private FeedController feedController;
@@ -38,7 +38,7 @@ public class TabelloneController {
 	public TabelloneController() {
 		loadProperties();
 		this.model = new TastierinoModel();
-		this.repo = new XMLRepository();
+		this.xmlRepository = new XMLRepository();
 		String rssUrl = properties.getProperty("rss_url");
 		try {
 			this.feedController = new FeedController(rssUrl);
@@ -48,7 +48,7 @@ public class TabelloneController {
 		}
 		loadServices();
 		groupService2machines();
-		this.tabelloneView = new TabelloneView(model, properties);
+		this.tabelloneView = new TabelloneView(model, properties, this);
 		// this.tabelloneView.updateViewText();
 		// Singleton.setTabelloneController(this);
 
@@ -60,7 +60,7 @@ public class TabelloneController {
 
 		int timeLeftToUpdateFeed = 4;
 		Map<Integer, Integer> service2lastNumberCalled = new HashMap<Integer, Integer>();
-		List<Service> services = repo.findAllServices();
+		List<Service> services = xmlRepository.findAllServices();
 		for (Service service : services) {
 			// if(Integer.parseInt(service.getCurrentNumber())){
 			service2lastNumberCalled.put(service.getId(), Integer.parseInt(service.getCurrentNumber()));
@@ -69,7 +69,7 @@ public class TabelloneController {
 
 		while (true) {
 			try {
-				services = repo.findAllServices();
+				services = xmlRepository.findAllServices();
 				for (Service service : services) {
 					int currentNumber = Integer.parseInt(service.getCurrentNumber());
 					int prevNumber = service2lastNumberCalled.get(service.getId());
@@ -123,7 +123,7 @@ public class TabelloneController {
 
 	private void loadServices() {
 		// find all services
-		List<Service> services = this.repo.findAllServices();
+		List<Service> services = this.xmlRepository.findAllServices();
 		Map<Integer, Service> id2service = this.model.getId2service();
 		for (int i = 0; i < services.size(); i++) {
 			id2service.put(i, services.get(i));
@@ -132,7 +132,7 @@ public class TabelloneController {
 
 	// find all the machines
 	private void loadMachines() {
-		List<Machine> machines = this.repo.findAllMachines();
+		List<Machine> machines = this.xmlRepository.findAllMachines();
 		this.model.setMachines(machines);
 	}
 

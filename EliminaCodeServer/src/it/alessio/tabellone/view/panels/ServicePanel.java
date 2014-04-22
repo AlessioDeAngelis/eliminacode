@@ -43,7 +43,6 @@ public class ServicePanel extends JPanel {
 
 	private void initComponents() {
 		this.setLayout(new GridLayout(2, 1));
-
 		JPanel topPanel = new JPanel();
 //		this.add(topPanel);
 		this.serviceNameTextField = new JTextField();
@@ -60,7 +59,7 @@ public class ServicePanel extends JPanel {
 		
 		this.serviceLastNumberTextField = new JTextField();
 		this.serviceLastNumberTextField.setEditable(false);
-		this.serviceLastNumberTextField.setPreferredSize(new Dimension(50, 50));
+//		this.serviceLastNumberTextField.setPreferredSize(new Dimension(50, 500));
 		this.serviceLastNumberTextField.setFont(new Font("SansSerif", Font.BOLD, 36));
 		this.serviceLastNumberTextField.setHorizontalAlignment(JTextField.CENTER);
 		this.serviceLastNumberTextField.setBackground(Color.LIGHT_GRAY);
@@ -70,7 +69,7 @@ public class ServicePanel extends JPanel {
 
 		this.descriptionTextField = new JTextField();
 		this.descriptionTextField.setEditable(false);
-		this.descriptionTextField.setPreferredSize(new Dimension(50, 50));
+//		this.descriptionTextField.setPreferredSize(new Dimension(50, 50));
 		this.descriptionTextField.setFont(new Font("SansSerif", Font.BOLD, 22));
 		this.descriptionTextField.setHorizontalAlignment(JTextField.LEFT);
 		this.descriptionTextField.setBackground(Color.LIGHT_GRAY);

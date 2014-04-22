@@ -1,2 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<history />
+<history>
+  <line>
+    <id>0</id>
+    <service>0</service>
+    <machine>1</machine>
+    <timestamp>Tue Apr 22 17:01:10 CEST 2014</timestamp>
+    <year>2014</year>
+    <month>Aprile</month>
+    <day>22</day>
+  </line>
+  <line>
+    <id>0</id>
+    <service>0</service>
+    <machine>1</machine>
+    <timestamp>Tue Apr 22 17:01:11 CEST 2014</timestamp>
+    <year>2014</year>
+    <month>Aprile</month>
+    <day>22</day>
+  </line>
+  <line>
+    <id>0</id>
+    <service>0</service>
+    <machine>1</machine>
+    <timestamp>Tue Apr 22 17:01:11 CEST 2014</timestamp>
+    <year>2014</year>
+    <month>Aprile</month>
+    <day>22</day>
+  </line>
+  <line>
+    <id>0</id>
+    <service>2</service>
+    <machine>1</machine>
+    <timestamp>Tue Apr 22 17:01:22 CEST 2014</timestamp>
+    <year>2014</year>
+    <month>Aprile</month>
+    <day>22</day>
+  </line>
+  <line>
+    <id>0</id>
+    <service>2</service>
+    <machine>1</machine>
+    <timestamp>Tue Apr 22 17:01:22 CEST 2014</timestamp>
+    <year>2014</year>
+    <month>Aprile</month>
+    <day>22</day>
+  </line>
+  <line>
+    <id>0</id>
+    <service>2</service>
+    <machine>1</machine>
+    <timestamp>Tue Apr 22 17:01:22 CEST 2014</timestamp>
+    <year>2014</year>
+    <month>Aprile</month>
+    <day>22</day>
+  </line>
+  <line>
+    <id>0</id>
+    <service>2</service>
+    <machine>1</machine>
+    <timestamp>Tue Apr 22 17:01:22 CEST 2014</timestamp>
+    <year>2014</year>
+    <month>Aprile</month>
+    <day>22</day>
+  </line>
+</history>
