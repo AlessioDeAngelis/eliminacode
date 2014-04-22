@@ -39,7 +39,6 @@ import javax.swing.JPanel;
  SO it controls user input and output
 
  */
-//TODO: audio viene fatto partire dal tabellone solo dopo che il tabellone abbia correttamente visualizzato i cambi
 public class TabelloneView extends JFrame {
 
 	/**
@@ -81,7 +80,6 @@ public class TabelloneView extends JFrame {
 		for (Service service : this.model.getId2service().values()) {
 			ServicePanel servicePanel = new ServicePanel(model, service, ColorFactory.getColor(service.getColor()));
 			this.serviceId2ServicePanel.put(service.getId(), servicePanel);
-
 		}
 		/* The machine panels */
 		this.machineId2MachinePanel = new HashMap<Integer, MachinePanel>();
@@ -103,7 +101,7 @@ public class TabelloneView extends JFrame {
 		this.leftPanel = new JPanel();
 		this.leftPanel.setBackground(Color.DARK_GRAY);
 		this.leftPanel.setLayout(new GridLayout(10, 1));
-		updateViewOrder(services);
+		updateViewOrder(services);		
 
 		/*
 		 * The imagePanel
@@ -136,10 +134,15 @@ public class TabelloneView extends JFrame {
 	 * Update the order of the various machine panels according to the service
 	 * */
 	public void updateViewOrder(List<Service> allServices) {
-		// if (leftPanel != null) {
-		// this.remove(leftPanel);
-		// }
-
+		//check how many machines are active, in order to resize the text
+		int numberOfActiveMachines = this.model.getActiveMachines().size();
+		int fontSize = 70;
+		if(numberOfActiveMachines > 5 && numberOfActiveMachines < 10){
+			fontSize = 50;
+		}if(numberOfActiveMachines >=10 ){
+			fontSize = 30;
+		}
+		
 		Map<Integer, List<Machine>> service2machines = this.model.getService2machines();
 		for (Service service : allServices) {
 			int serviceId = service.getId();
@@ -151,21 +154,24 @@ public class TabelloneView extends JFrame {
 				for (Machine machine : machines) {
 					// insert the various machine panels corresponding to the
 					// service after the service panel
-					if (machine.isActive()) { //show the machine only if it's active
-						int machineId = machine.getId();
-						MachinePanel machinePanel = this.machineId2MachinePanel.get(machineId);
-						machinePanel.setMachine(machine);
-						String colorString = this.model.getId2service().get(serviceId).getColor();
-						Color color = ColorFactory.getColor(colorString);
-						machinePanel.updateNumberColor(color);
+					int machineId = machine.getId();
+					MachinePanel machinePanel = this.machineId2MachinePanel.get(machineId);
+					machinePanel.setMachine(machine);
+					machinePanel.updateFontSize(fontSize);
+					String colorString = this.model.getId2service().get(serviceId).getColor();
+					Color color = ColorFactory.getColor(colorString);
+					machinePanel.updateNumberColor(color);
+					if (machine.isActive()) {
 						this.leftPanel.add(machinePanel);
+					} else {
+						this.leftPanel.remove(machinePanel);
 					}
 				}
 			}
 		}
 		// this.upperPanel.add(leftPanel, BorderLayout.WEST);// add the left
 		// panel to the frame
-		// this.add(leftPanel, BorderLayout.WEST);
+		this.add(leftPanel, BorderLayout.WEST);
 		this.leftPanel.validate();// for rendering the new layout
 		this.validate();
 	}

@@ -85,6 +85,7 @@ public class MachinePanel extends JPanel {
 	}
 	
 	public void updateFontSize(int newSize){
-		
+		this.currentNumberTextField.setFont(new Font("SansSerif", Font.BOLD, newSize));
+		this.machineNumberTextField.setFont(new Font("SansSerif", Font.BOLD, newSize));
 	}
 }

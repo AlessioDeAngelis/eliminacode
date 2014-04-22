@@ -61,5 +61,15 @@ public class TastierinoModel {
 	public void setCurrentMachine(Machine currentMachine) {
 		this.currentMachine = currentMachine;
 	}
+	
+	public List<Machine> getActiveMachines(){
+		List<Machine> activeMachines = new ArrayList();
+		for(Machine machine : this.machines){
+			if(machine.isActive()){
+				activeMachines.add(machine);
+			}
+		}
+		return activeMachines;
+	}
 
 }

@@ -253,11 +253,11 @@ public class TastierinoController {
 			}
 		}
 	}
-
+	
+	/**
+	 * sets active or not active the current machine
+	 */
 	public void turnOnOffAction(int machineThatTriggered) {
-		/*
-		 * sets active or not active the current machine
-		 */
 		Machine currentMachine = this.model.getCurrentMachine();
 		boolean isActive = currentMachine.isActive();
 		currentMachine.setActive(!isActive);
@@ -267,11 +267,10 @@ public class TastierinoController {
 		view.changeDisplayText(""+currentMachine.getNumberYouAreServing());
 	}
 	
-	public void closeCurrentMachineAction() {
-		/*
-		 * Close the machine and set it inactive
-		 */
-		
+	/**
+	 * Close the machine and set it inactive
+	 */
+	public void closeCurrentMachineAction() {		
 		Machine currentMachine = this.model.getCurrentMachine();
 		currentMachine.setActive(false);
 		this.xmlRepository.updateMachine(currentMachine);	

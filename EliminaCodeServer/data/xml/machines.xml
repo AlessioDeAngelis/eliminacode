@@ -4,30 +4,60 @@
     <id>0</id>
     <current_number>0</current_number>
     <current_service>0</current_service>
-    <is_active>false</is_active>
+    <is_active>true</is_active>
   </machine>
   <machine>
     <id>1</id>
     <current_number>0</current_number>
-    <current_service>2</current_service>
-    <is_active>false</is_active>
+    <current_service>0</current_service>
+    <is_active>true</is_active>
   </machine>
   <machine>
     <id>2</id>
     <current_number>0</current_number>
     <current_service>0</current_service>
-    <is_active>false</is_active>
+    <is_active>true</is_active>
   </machine>
   <machine>
     <id>3</id>
     <current_number>0</current_number>
     <current_service>0</current_service>
-    <is_active>false</is_active>
+    <is_active>true</is_active>
   </machine>
   <machine>
     <id>4</id>
     <current_number>0</current_number>
     <current_service>0</current_service>
-    <is_active>false</is_active>
+    <is_active>true</is_active>
+  </machine>
+  <machine>
+    <id>5</id>
+    <current_number>0</current_number>
+    <current_service>0</current_service>
+    <is_active>true</is_active>
+  </machine>
+  <machine>
+    <id>6</id>
+    <current_number>0</current_number>
+    <current_service>0</current_service>
+    <is_active>true</is_active>
+  </machine>
+  <machine>
+    <id>7</id>
+    <current_number>0</current_number>
+    <current_service>0</current_service>
+    <is_active>true</is_active>
+  </machine>
+  <machine>
+    <id>8</id>
+    <current_number>0</current_number>
+    <current_service>0</current_service>
+    <is_active>true</is_active>
+  </machine>
+  <machine>
+    <id>9</id>
+    <current_number>0</current_number>
+    <current_service>0</current_service>
+    <is_active>true</is_active>
   </machine>
 </machines>
