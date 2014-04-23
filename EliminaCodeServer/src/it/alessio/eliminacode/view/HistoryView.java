@@ -3,7 +3,7 @@ package it.alessio.eliminacode.view;
 import it.alessio.eliminacode.common.model.ItalianEnglishMonthConverter;
 import it.alessio.eliminacode.controller.HistoryController;
 import it.alessio.eliminacode.listeners.MyListSelectionListener;
-import it.alessio.eliminacode.listeners.OkButtonActionListener;
+import it.alessio.eliminacode.listeners.OkButtonHistoryActionListener;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -81,7 +81,7 @@ public class HistoryView extends JFrame {
 
 	public void addListeners(HistoryController historyController) {
 		this.list.addListSelectionListener(new MyListSelectionListener(historyController));
-		this.okButton.addActionListener(new OkButtonActionListener(historyController));
+		this.okButton.addActionListener(new OkButtonHistoryActionListener(historyController));
 	}
 
 	public void updateText(String text) {

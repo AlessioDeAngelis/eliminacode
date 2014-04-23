@@ -1,21 +1,22 @@
 package it.alessio.eliminacode.listeners;
 
 import it.alessio.eliminacode.controller.HistoryController;
+import it.alessio.eliminacode.controller.StartUpController;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class OkButtonActionListener implements ActionListener {
-	private HistoryController controller;
+public class OkButtonStartupActionListener implements ActionListener {
+	private StartUpController controller;
 
-	public OkButtonActionListener(HistoryController controller) {
+	public OkButtonStartupActionListener(StartUpController controller) {
 		super();
 		this.controller = controller;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		this.controller.calculateStatistics();
+		this.controller.generateActivationCode();
 	}
 
 }

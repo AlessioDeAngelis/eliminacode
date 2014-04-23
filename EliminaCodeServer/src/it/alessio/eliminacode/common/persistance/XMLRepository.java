@@ -54,7 +54,8 @@ public class XMLRepository {
 	}
 
 	/**
-	 * I will persist only the id, the currentNumber and the current service, if it active
+	 * I will persist only the id, the currentNumber and the current service, if
+	 * it active
 	 * */
 	public void persistMachine(Machine machine) {
 		try {
@@ -77,9 +78,11 @@ public class XMLRepository {
 			XMLOutputter xmlOutput = new XMLOutputter();
 
 			// display nice nice
-			xmlOutput.setFormat(Format.getPrettyFormat());
-			xmlOutput.output(doc, new FileWriter(machinesFilePath));
+			FileWriter writer = new FileWriter(machinesFilePath);
 
+			xmlOutput.setFormat(Format.getPrettyFormat());
+			xmlOutput.output(doc, writer);
+			writer.close();
 			// System.out.println("Machine Saved in " + machinesFilePath);
 		} catch (IOException io) {
 			System.out.println(io.getMessage());
@@ -113,8 +116,10 @@ public class XMLRepository {
 			XMLOutputter xmlOutput = new XMLOutputter();
 
 			// display nice nice
+			FileWriter fileWriter = new FileWriter(servicesFilePath);
 			xmlOutput.setFormat(Format.getPrettyFormat());
-			xmlOutput.output(doc, new FileWriter(servicesFilePath));
+			xmlOutput.output(doc, fileWriter);
+			fileWriter.close();
 
 			// System.out.println("Service Saved in " + servicesFilePath);
 		} catch (IOException io) {
@@ -149,9 +154,11 @@ public class XMLRepository {
 			XMLOutputter xmlOutput = new XMLOutputter();
 
 			// display nice nice
-			xmlOutput.setFormat(Format.getPrettyFormat());
-			xmlOutput.output(doc, new FileWriter(historyFilePath));
+			FileWriter fileWriter = new FileWriter(historyFilePath);
 
+			xmlOutput.setFormat(Format.getPrettyFormat());
+			xmlOutput.output(doc, fileWriter);
+			fileWriter.close();
 		} catch (IOException io) {
 			System.out.println(io.getMessage());
 		} catch (JDOMException e) {
@@ -184,8 +191,10 @@ public class XMLRepository {
 			XMLOutputter xmlOutput = new XMLOutputter();
 
 			// display nice nice
+			FileWriter fileWriter = new FileWriter(servicesFilePath);
 			xmlOutput.setFormat(Format.getPrettyFormat());
-			xmlOutput.output(doc, new FileWriter(servicesFilePath));
+			xmlOutput.output(doc, fileWriter);
+			fileWriter.close();
 
 			// System.out.println("Service Saved in " + servicesFilePath);
 		} catch (IOException io) {
@@ -228,8 +237,10 @@ public class XMLRepository {
 			XMLOutputter xmlOutput = new XMLOutputter();
 
 			// display nice nice
+			FileWriter fileWriter = new FileWriter(servicesFilePath);
 			xmlOutput.setFormat(Format.getPrettyFormat());
-			xmlOutput.output(doc, new FileWriter(servicesFilePath));
+			xmlOutput.output(doc, fileWriter);
+			fileWriter.close();
 
 			// xmlOutput.output(doc, System.out);
 
@@ -264,7 +275,7 @@ public class XMLRepository {
 				String currentServiceId = machineElement.getChildText("current_service");
 				String activeString = machineElement.getChildText("is_active");
 				boolean isActive = false;
-				if(activeString!=null && activeString.equals("true")){
+				if (activeString != null && activeString.equals("true")) {
 					isActive = true;
 				}
 
@@ -279,8 +290,10 @@ public class XMLRepository {
 			XMLOutputter xmlOutput = new XMLOutputter();
 
 			// display nice nice
+			FileWriter fileWriter = new FileWriter(machinesFilePath);
 			xmlOutput.setFormat(Format.getPrettyFormat());
-			xmlOutput.output(doc, new FileWriter(machinesFilePath));
+			xmlOutput.output(doc, fileWriter);
+			fileWriter.close();
 
 			// xmlOutput.output(doc, System.out);
 		} catch (IOException io) {
@@ -312,8 +325,10 @@ public class XMLRepository {
 			XMLOutputter xmlOutput = new XMLOutputter();
 
 			// display nice nice
+			FileWriter fileWriter = new FileWriter(servicesFilePath);
 			xmlOutput.setFormat(Format.getPrettyFormat());
-			xmlOutput.output(doc, new FileWriter(servicesFilePath));
+			xmlOutput.output(doc, fileWriter);
+			fileWriter.close();
 
 			// xmlOutput.output(doc, System.out);
 
@@ -349,8 +364,10 @@ public class XMLRepository {
 			XMLOutputter xmlOutput = new XMLOutputter();
 
 			// display nice nice
+			FileWriter fileWriter = new FileWriter(machinesFilePath);
 			xmlOutput.setFormat(Format.getPrettyFormat());
-			xmlOutput.output(doc, new FileWriter(machinesFilePath));
+			xmlOutput.output(doc, fileWriter);
+			fileWriter.close();
 
 			// xmlOutput.output(doc, System.out);
 
@@ -394,8 +411,10 @@ public class XMLRepository {
 			XMLOutputter xmlOutput = new XMLOutputter();
 
 			// display nice nice
+			FileWriter fileWriter = new FileWriter(machinesFilePath);
 			xmlOutput.setFormat(Format.getPrettyFormat());
-			xmlOutput.output(doc, new FileWriter(machinesFilePath));
+			xmlOutput.output(doc, fileWriter);
+			fileWriter.close();
 
 			// xmlOutput.output(doc, System.out);
 
@@ -440,8 +459,10 @@ public class XMLRepository {
 			XMLOutputter xmlOutput = new XMLOutputter();
 
 			// display nice nice
+			FileWriter fileWriter = new FileWriter(servicesFilePath);
 			xmlOutput.setFormat(Format.getPrettyFormat());
-			xmlOutput.output(doc, new FileWriter(servicesFilePath));
+			xmlOutput.output(doc, fileWriter);
+			fileWriter.close();
 
 			// xmlOutput.output(doc, System.out);
 
@@ -472,17 +493,19 @@ public class XMLRepository {
 				String timestamp = serviceElement.getChildText("timestamp");
 				String[] dayMonthYear = timestamp.split(" ");
 				String weekDay = dayMonthYear[0];
-				String month = ItalianEnglishMonthConverter.english2italianMonth(dayMonthYear[1],"english");
+				String month = ItalianEnglishMonthConverter.english2italianMonth(dayMonthYear[1], "english");
 				String day = dayMonthYear[2];
 				String year = dayMonthYear[5];
-				lines.add(weekDay + "-" + day + "-"+ month + "-" + year);
+				lines.add(weekDay + "-" + day + "-" + month + "-" + year);
 			}
 
 			XMLOutputter xmlOutput = new XMLOutputter();
 
 			// display nice nice
+			FileWriter fileWriter = new FileWriter(historyFilePath);
 			xmlOutput.setFormat(Format.getPrettyFormat());
-			xmlOutput.output(doc, new FileWriter(historyFilePath));
+			xmlOutput.output(doc, fileWriter);
+			fileWriter.close();
 
 			// xmlOutput.output(doc, System.out);
 
@@ -531,8 +554,10 @@ public class XMLRepository {
 			XMLOutputter xmlOutput = new XMLOutputter();
 
 			// display nice nice
+			FileWriter fileWriter = new FileWriter(historyFilePath);
 			xmlOutput.setFormat(Format.getPrettyFormat());
-			xmlOutput.output(doc, new FileWriter(historyFilePath));
+			xmlOutput.output(doc, fileWriter);
+			fileWriter.close();
 
 			// xmlOutput.output(doc, System.out);
 

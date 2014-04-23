@@ -8,6 +8,6 @@ import java.util.Properties;
 public class EliminaCodeStartUp {
 	public static void main(String[] args) {
 		StartUpController controller = new StartUpController();
-		controller.initialize();
+//		controller.startTheSetupOperation();
 	}
 }
