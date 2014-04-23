@@ -4,13 +4,19 @@ import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
 import it.alessio.eliminacode.common.model.TastierinoModel;
 import it.alessio.eliminacode.common.model.comparator.MachineComparator;
+import it.alessio.eliminacode.common.persistance.SecretKeyRepository;
 import it.alessio.eliminacode.common.persistance.XMLRepository;
 import it.alessio.eliminacode.common.sound.MusicPlayer;
+import it.alessio.eliminacode.security.EncryptorManager;
+import it.alessio.eliminacode.security.MacManager;
+import it.alessio.eliminacode.security.SecretKeyEntity;
 import it.alessio.tabellone.news.FeedController;
 import it.alessio.tabellone.news.FeedMessage;
 import it.alessio.tabellone.view.TabelloneView;
 import it.alessio.tastierino.view.TastierinoView;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,6 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.swing.JFrame;
+import javax.swing.JTextArea;
 
 /**
  * The Controller coordinates interactions between the View and Model Of the
@@ -36,22 +45,47 @@ public class TabelloneController {
 	private boolean isInternetAvailable = true;
 
 	public TabelloneController() {
-		loadProperties();
-		this.model = new TastierinoModel();
-		this.xmlRepository = new XMLRepository();
-		String rssUrl = properties.getProperty("rss_url");
-		try {
-			this.feedController = new FeedController(rssUrl);
-			this.feedController.initializeFeed();
-		} catch (Exception e) {
-			isInternetAvailable = false;
+		if (verifyAuthenticCopy()) {
+			loadProperties();
+			this.model = new TastierinoModel();
+			this.xmlRepository = new XMLRepository();
+			String rssUrl = properties.getProperty("rss_url");
+			try {
+				this.feedController = new FeedController(rssUrl);
+				this.feedController.initializeFeed();
+			} catch (Exception e) {
+				isInternetAvailable = false;
+			}
+			loadServices();
+			groupService2machines();
+			this.tabelloneView = new TabelloneView(model, properties, this);
+			// this.tabelloneView.updateViewText();
+			// Singleton.setTabelloneController(this);
 		}
-		loadServices();
-		groupService2machines();
-		this.tabelloneView = new TabelloneView(model, properties, this);
-		// this.tabelloneView.updateViewText();
-		// Singleton.setTabelloneController(this);
+	}
 
+	private boolean verifyAuthenticCopy() {
+		String macAddress = MacManager.findMac();
+		EncryptorManager encMan = new EncryptorManager();
+		String activationCode = encMan.generateActivationCodeFromMac(macAddress);
+		String serialCode = encMan.generateSerialKey(activationCode);
+		SecretKeyRepository secretRepo = new SecretKeyRepository();
+		SecretKeyEntity key = secretRepo.findSecretKey();
+		boolean result = true;
+		if (!serialCode.equals(key.getSerialCode())) {
+			JFrame frame = new JFrame("COPIA CONTRAFFATTA");
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setSize(500, 500);
+			frame.setVisible(true);
+
+			JTextArea text = new JTextArea();
+			text.setForeground(Color.RED);
+			text.setText("LA COPIA IN USO E' STATA VIOLATA! CONTATTARE IL FORNITORE DEL SISTEMA PER RISOLVERE IL PROBLEMA");
+			text.setFont(new Font("SansSerif", Font.BOLD, 20));
+			frame.add(text);
+			result = false;
+		}
+		return result;
 	}
 
 	public void mainLoop() {

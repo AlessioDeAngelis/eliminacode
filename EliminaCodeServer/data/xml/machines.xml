@@ -9,8 +9,8 @@
   <machine>
     <id>1</id>
     <current_number>4</current_number>
-    <current_service>2</current_service>
-    <is_active>false</is_active>
+    <current_service>0</current_service>
+    <is_active>true</is_active>
   </machine>
   <machine>
     <id>2</id>
