@@ -568,4 +568,35 @@ public class XMLRepository {
 		}
 		return lines;
 	}
+
+	/**
+	 * Checks if the trial mode is expired. This happens when there are more
+	 * than 100 history lines.
+	 * */
+	public boolean isTrialExpired() {
+		boolean expired = false;
+		try {
+			SAXBuilder builder = new SAXBuilder();
+			File xmlFile = new File(historyFilePath);
+
+			Document doc = (Document) builder.build(xmlFile);
+			Element rootNode = doc.getRootElement();
+
+			// use xpath to find the node
+			XPathFactory xpfac = XPathFactory.instance();
+			XPathExpression xp = xpfac.compile("//history/line", Filters.element());
+			List<Element> elements = xp.evaluate(rootNode);
+			// update the node
+
+			if (elements.size() > 15) {
+				expired = true;
+			}
+
+		} catch (IOException io) {
+			io.printStackTrace();
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		}
+		return expired;
+	}
 }

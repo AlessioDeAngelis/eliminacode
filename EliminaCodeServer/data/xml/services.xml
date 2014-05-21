@@ -4,7 +4,7 @@
     <id>0</id>
     <name>Accettazione</name>
     <color>ROSSO</color>
-    <current_number>4</current_number>
+    <current_number>0</current_number>
   </service>
   <service>
     <id>1</id>

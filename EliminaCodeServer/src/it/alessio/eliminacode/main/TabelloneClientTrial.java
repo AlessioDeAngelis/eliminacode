@@ -2,8 +2,8 @@ package it.alessio.eliminacode.main;
 
 import it.alessio.tabellone.controller.TabelloneController;
 
-public class TabelloneClient {
+public class TabelloneClientTrial {
 	public static void main(String[] args) {
-		TabelloneController tabellone = new TabelloneController(false);// trial mode off
+		TabelloneController tabellone = new TabelloneController(true);//trial mode on
 	}
 }

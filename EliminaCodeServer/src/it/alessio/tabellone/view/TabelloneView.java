@@ -77,8 +77,8 @@ public class TabelloneView extends JFrame {
 	}
 
 	private void initComponents() {
-//		 this.setLayout(new GridBagLayout());
-		
+		// this.setLayout(new GridBagLayout());
+
 		this.upperPanel = new JPanel();
 		upperPanel.setLayout(new GridLayout(2, 1));
 		// this.add(upperPanel,BorderLayout.NORTH);
@@ -107,9 +107,9 @@ public class TabelloneView extends JFrame {
 		 * */
 		this.leftPanel = new JPanel();
 		this.leftPanel.setBackground(Color.DARK_GRAY);
-//		this.leftPanel.setLayout(new GridLayout(15, 1));
+		// this.leftPanel.setLayout(new GridLayout(15, 1));
 		this.leftPanel.setLayout(new MigLayout("fill"));
-		updateViewOrder(services);		
+		updateViewOrder(services);
 
 		/*
 		 * The imagePanel
@@ -134,23 +134,31 @@ public class TabelloneView extends JFrame {
 		} else {// 32 bit
 			vlcPath = this.properties.getProperty("vlc_path_win32");
 		}
-		this.videoPanel = new VideoPanel(vlcPath);	
+		this.videoPanel = new VideoPanel(vlcPath);
 	}
 
 	/**
 	 * Update the order of the various machine panels according to the service
 	 * */
 	public void updateViewOrder(List<Service> allServices) {
-		//check how many machines are active, in order to resize the text
+		// check how many machines are active, in order to resize the text
 		int numberOfActiveMachines = this.model.getActiveMachines().size();
+		int numberOfMachinesToBeDisplayedPerService = Integer.MAX_VALUE;
 		int fontSize = 50;
-		if(numberOfActiveMachines > 5 && numberOfActiveMachines < 10){
-			fontSize = 40;
-		}if(numberOfActiveMachines >=10 ){
-			fontSize = 20;
+
+		// if(numberOfActiveMachines > 5 && numberOfActiveMachines < 10){
+		// fontSize = 40;
+		// }if(numberOfActiveMachines >=10 ){
+		// fontSize = 20;
+		// }
+		if (numberOfActiveMachines >= 10) {
+			numberOfMachinesToBeDisplayedPerService = 2;
 		}
-	
-		
+
+		if (numberOfActiveMachines > 5) {
+			fontSize = 40;
+		}
+
 		Map<Integer, List<Machine>> service2machines = this.model.getService2machines();
 		for (Service service : allServices) {
 			int serviceId = service.getId();
@@ -159,7 +167,11 @@ public class TabelloneView extends JFrame {
 			this.leftPanel.add(servicePanel, "wrap, height 50:70:120, growx");
 			List<Machine> machines = service2machines.get(serviceId);
 			if (machines != null && machines.size() > 0) {
-				for (Machine machine : machines) {
+				// per service you should not display a lot of machines if there
+				// are a lot of active machines because they could not fit the
+				// screen
+				for (int i = 0; i < machines.size() && i < (numberOfMachinesToBeDisplayedPerService); i++) {
+					Machine machine = machines.get(i);
 					// insert the various machine panels corresponding to the
 					// service after the service panel
 					int machineId = machine.getId();
@@ -180,7 +192,7 @@ public class TabelloneView extends JFrame {
 		// this.upperPanel.add(leftPanel, BorderLayout.WEST);// add the left
 		// panel to the frame
 		this.add(leftPanel, BorderLayout.WEST);
-//		this.add(leftPanel,"left, growx");
+		// this.add(leftPanel,"left, growx");
 		this.leftPanel.validate();// for rendering the new layout
 		this.validate();
 	}

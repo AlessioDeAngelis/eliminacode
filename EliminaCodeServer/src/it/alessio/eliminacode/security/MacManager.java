@@ -14,7 +14,8 @@ public class MacManager {
 		try {
 
 			ip = InetAddress.getLocalHost();
-			NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+//			NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+			NetworkInterface network = NetworkInterface.getByIndex(0);
 			mac = network.getHardwareAddress();
 			for (int i = 0; i < mac.length; i++) {
 				sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));

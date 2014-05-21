@@ -2,6 +2,7 @@ package it.alessio.eliminacode.controller;
 
 import it.alessio.eliminacode.common.model.Machine;
 import it.alessio.eliminacode.common.model.Service;
+import it.alessio.eliminacode.common.persistance.BatchFileManager;
 import it.alessio.eliminacode.common.persistance.SecretKeyRepository;
 import it.alessio.eliminacode.common.persistance.XMLRepository;
 import it.alessio.eliminacode.security.EncryptorManager;
@@ -24,9 +25,11 @@ public class StartUpController {
 	private StartupView view;
 	private SecretKeyRepository secretKeyRepository;
 	private String inputSerialCode;
+	private BatchFileManager batchFileManager;
 
 	public StartUpController() {
 		this.inputSerialCode = "";
+		this.batchFileManager = new BatchFileManager();
 		this.secretKeyRepository = new SecretKeyRepository();
 		this.view = new StartupView(this);
 		this.view.initialize();
@@ -99,7 +102,10 @@ public class StartUpController {
 			machine.setNumberYouAreServing(0);
 			machine.setServiceId(0);
 			System.out.println("Inserting " + machine);
+			//persist machine in the xml file
 			this.xmlRepository.persistMachine(machine);
+			//creates a batch file for the machine
+			this.batchFileManager.createTastierinoBatchFile(i);
 		}
 	}
 
@@ -113,6 +119,7 @@ public class StartUpController {
 	 * **/
 	public void generateActivationCode() {
 		String macAddress = MacManager.findMac();
+		System.out.println("Mac Address: " + macAddress);
 		EncryptorManager encMan = new EncryptorManager();
 		String activationCode = encMan.generateActivationCodeFromMac(macAddress);
 		String serialCode = encMan.generateSerialKey(activationCode);

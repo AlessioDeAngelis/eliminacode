@@ -44,7 +44,7 @@ public class TabelloneController {
 	private FeedController feedController;
 	private boolean isInternetAvailable = true;
 
-	public TabelloneController() {
+	public TabelloneController(boolean isTrialModeOn) {
 		if (verifyAuthenticCopy()) {
 			loadProperties();
 			this.model = new TastierinoModel();
@@ -58,11 +58,27 @@ public class TabelloneController {
 			}
 			loadServices();
 			groupService2machines();
-			this.tabelloneView = new TabelloneView(model, properties, this);
 			// this.tabelloneView.updateViewText();
 			// Singleton.setTabelloneController(this);
+			if (isTrialModeOn && xmlRepository.isTrialExpired()) {
+				JFrame frame = new JFrame("VERSIONE DI PROVA TERMINATA");
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.setSize(500, 500);
+				frame.setVisible(true);
+
+				JTextArea text = new JTextArea();
+				text.setForeground(Color.RED);
+				text.setText("LA VERSIONE DI PROVA E' TERMINATA, ACQUISTARE LA VERSIONE COMPLETA PER CONTINUARE A UTILIZZARE IL PRODOTTO");
+				text.setFont(new Font("SansSerif", Font.BOLD, 20));
+				frame.add(text);
+			} else {
+				this.tabelloneView = new TabelloneView(model, properties, this);
+				this.mainLoop();
+			}
 		}
+
 	}
+
 
 	private boolean verifyAuthenticCopy() {
 		String macAddress = MacManager.findMac();
@@ -80,7 +96,7 @@ public class TabelloneController {
 
 			JTextArea text = new JTextArea();
 			text.setForeground(Color.RED);
-			text.setText("LA COPIA IN USO E' STATA VIOLATA! CONTATTARE IL FORNITORE DEL SISTEMA PER RISOLVERE IL PROBLEMA");
+			text.setText("LA COPIA IN USO E' STATA VIOLATA! CONTATTARE IL FORNITORE DEL SISTEMA PER RISOLVERE IL PROBLEMA E CONTINUARE A USARLA");
 			text.setFont(new Font("SansSerif", Font.BOLD, 20));
 			frame.add(text);
 			result = false;

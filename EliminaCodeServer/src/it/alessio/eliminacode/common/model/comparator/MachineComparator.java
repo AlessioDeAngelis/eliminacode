@@ -9,7 +9,7 @@ public class MachineComparator implements Comparator<Machine>{
 	@Override
 	public int compare(Machine o1, Machine o2) {
 		int result = 0;
-		result = o1.getNumberYouAreServing() - o2.getNumberYouAreServing();
+		result = o2.getNumberYouAreServing() - o1.getNumberYouAreServing();
 		return result;
 	}
 
